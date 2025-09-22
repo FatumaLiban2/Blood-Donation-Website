@@ -1,7 +1,28 @@
 <?php
 /**
- * Basic LoginController class with constructor and properties
- * Demonstrates: Class definition, private properties, constructor
+ * LoginController Class
+ * 
+ * Handles user authentication, session management, and security
+ * for the Blood Donation Website system.
+ * 
+ * OOP Concepts Demonstrated:
+ * - Encapsulation: Private methods and properties ($db, startSession, validateLoginInputs, etc.)
+ * - Abstraction: Public interface methods (login, logout, isLoggedIn, etc.)
+ * - Method composition: Breaking complex operations into smaller methods
+ * - Error handling: Try-catch blocks and validation throughout
+ * - State management: Session handling and user state tracking
+ * - Security: Session regeneration, input validation, access control
+ * - Dependency injection: Database connection passed via constructor
+ * 
+ * Usage Example:
+ * $database = new Database();
+ * $loginController = new LoginController($database->getConnection());
+ * $result = $loginController->login($username, $password);
+ * 
+ * @author [Your Name]
+ * @version 1.0
+ * @since PHP 7.0
+ * @package BloodDonationWebsite
  */
 class LoginController {
     private $db;
@@ -195,6 +216,15 @@ class LoginController {
             'current_user' => $this->getCurrentUser(),
             'session_id' => session_id()
         ];
+    }
+    
+    /**
+     * Destructor - Clean up resources if needed
+     * Demonstrates: Object lifecycle management
+     */
+    public function __destruct() {
+        // Clean up any resources if needed
+        // Currently no cleanup required, but demonstrates destructor usage
     }
 }
     
