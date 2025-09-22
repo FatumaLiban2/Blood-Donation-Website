@@ -56,15 +56,38 @@ class LoginController {
         return $errors;
     }
     
+    /**
+     * Main login method
+     * Demonstrates: Public interface, method composition, return arrays
+     */
     public function login($username, $password) {
+        // Use validation method
+        $validationErrors = $this->validateLoginInputs($username, $password);
+        
+        if (!empty($validationErrors)) {
+            return [
+                'success' => false,
+                'message' => implode(', ', $validationErrors)
+            ];
+        }
+        
+        // Use private database method
         $user = $this->findUserByUsername($username);
         
         if ($user && password_verify($password, $user['password'])) {
-            $_SESSION['user_id'] = $user['id'];
-            $_SESSION['username'] = $user['username'];
-            return true;
+            $this->setUserSession($user);
+            
+            return [
+                'success' => true,
+                'message' => 'Login successful',
+                'user_id' => $user['id']
+            ];
         }
-        return false;
+        
+        return [
+            'success' => false,
+            'message' => 'Invalid credentials'
+        ];
     }
     
     public function logout() {
