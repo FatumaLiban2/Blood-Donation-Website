@@ -90,14 +90,46 @@ class LoginController {
         ];
     }
     
+    /**
+     * Set user session data
+     * Demonstrates: Private helper method, session security
+     */
+    private function setUserSession($user) {
+        $_SESSION['user_id'] = $user['id'];
+        $_SESSION['username'] = $user['username'];
+        $_SESSION['login_time'] = time();
+        
+        // Security: regenerate session ID
+        session_regenerate_id(true);
+    }
+    
+    /**
+     * Check if user is logged in
+     * Demonstrates: Boolean return, session checking
+     */
+    public function isLoggedIn() {
+        return isset($_SESSION['user_id']) && !empty($_SESSION['user_id']);
+    }
+    
+    /**
+     * Get current user information
+     * Demonstrates: Conditional return, array structure
+     */
+    public function getCurrentUser() {
+        if (!$this->isLoggedIn()) {
+            return null;
+        }
+        
+        return [
+            'id' => $_SESSION['user_id'],
+            'username' => $_SESSION['username'] ?? 'Unknown',
+            'login_time' => $_SESSION['login_time'] ?? null
+        ];
+    }
+    
     public function logout() {
         // Session already started in constructor, no need to start again
         session_destroy();
-    }
-    
-    public function isLoggedIn() {
-        // Session already started in constructor, no need to start again
-        return isset($_SESSION['user_id']);
     }
 }
     
