@@ -18,7 +18,8 @@ class LoginController {
     }
     
     /**
-     * Find user by username (replaces the missing userModel)
+     * Private method to find user by username
+     * Demonstrates: Encapsulation, prepared statements
      */
     private function findUserByUsername($username) {
         try {
@@ -34,7 +35,7 @@ class LoginController {
     }
     
     public function login($username, $password) {
-        $user = $this->findUserByUsername($username); // Fixed: using our method instead of missing userModel
+        $user = $this->findUserByUsername($username);
         
         if ($user && password_verify($password, $user['password'])) {
             $_SESSION['user_id'] = $user['id'];
@@ -54,3 +55,4 @@ class LoginController {
         return isset($_SESSION['user_id']);
     }
 }
+    
