@@ -35,4 +35,3 @@ class SignUpController {
 
         return false;
     }
-}
