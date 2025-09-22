@@ -12,7 +12,7 @@ class SignUpController {
         // Check if username already exists
         $existingUser = $this->userModel->findByUsername($username);
         if ($existingUser) {
-            return false; 
+            return "Username already taken"; 
         }
 
         
@@ -30,8 +30,8 @@ class SignUpController {
             session_start();
             $_SESSION['user_id'] = $userId;
             $_SESSION['username'] = $username;
-            return true;
+            return "Signup successful";
         }
 
-        return false;
+        return "Failed, please try again";
     }
