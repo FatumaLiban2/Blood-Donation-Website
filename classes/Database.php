@@ -1,4 +1,4 @@
-<?php
+t <?php
 
 class Database {
     private $db_type;
