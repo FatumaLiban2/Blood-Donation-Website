@@ -14,7 +14,7 @@
                     <h2>Life Blood</h2>
                 </div>
                 <ul class="nav-menu">
-                    <li><a href="#home">Home></a></li>
+                    <li><a href="#home">Home</a></li>
                     <li><a href="#about">About</a></li>
                     <li><a href="learn">Learn</a></li>
                     <li><a href="#donate">Donate</a></li>
@@ -317,15 +317,217 @@
                     <h2>Donation Eligibility</h2>
                     <p>Check if you are eligible to donate blood</p>
                 </div>
-                <div class="checker-form">
-                    <div class="question">
-                        <label>Are you at least 17 years old?</label>
-                        <div class="radio-group">
-                            
+                <div class="eligibility-content">
+                    <div class="eligibility-checker">
+                        <div class="checker-form">
+                            <div class="question">
+                                <label>Are you at least 17 years old?</label>
+                                <div class="radio-group">
+                                <input type="radio" name="age" value="yes" id="age-yes">
+                                <label for="age-yes">Yes</label>
+                                <input type="radio" name="age" value="no" id="age-no">
+                                <label for="age-no">No</label> 
+                                </div>
+                            </div>
+                            <div class="question">
+                                <label>Do you at least weigh 50kgs?</label>
+                                <div class="radio-group">
+                                    <input type="radio" name="weight" value="yes" id="weight-yes">
+                                    <label for="weight-yes">Yes</label>
+                                    <input type="radio" name="weight" value="no" id="weight-no">
+                                    <label for="weight-no">No</label>
+                                </div>
+                            </div>
+                            <div class="question">
+                                <label>Do you feel healthy today?</label>
+                                <div class="radio-group">
+                                    <input type="radio" name="health" value="yes" id="health-yes">
+                                    <label for="health-yes">Yes</label>
+                                    <input type="radio" name="health" value="no" id="health-no">
+                                    <label for="health-no">No</label>
+                                </div>
+                            </div>
+                            <button type="button" class="btn-primary">Check Eligibility</button>
+                            <div id="eligibilityResult" class="eligibility-results"></div>
+                        </div>
+                    </div>
+                    <div class="eligibility-guidelines">
+                        <div class="guidelines-grid">
+                            <div class="guideline-card eligible">
+                                <h4>You CAN Donate If:</h4>
+                                <ul>
+                                    <li>You are 17-75 years old</li>
+                                    <li>You weigh at least 110 pounds</li>
+                                    <li>You are in good health</li>
+                                    <li>It's been 56+ days since your last donation</li>
+                                    <li>You have a valid ID</li>
+                                    <li>You've had adequate sleep</li>
+                                    <li>You've eaten in the last 4 hours</li>
+                                </ul>
+                            </div>
+                            <div class="guideline-card" not-eligible>
+                                <h4>You CANNOT Donate If:</h4>
+                                <ul>
+                                    <li>You have a cold, flu, or fever</li>
+                                    <li>You're pregnant</li>
+                                    <li>You've had recent tattoos/piercings (varies by location)</li>
+                                    <li>You've traveled to certain countries recently</li>
+                                    <li>You're taking certain medications</li>
+                                    <li>You have certain medical conditions</li>
+                                    <li>You've donated within the last 56 days</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="additional-info">
+                            <p><strong>Note:</strong> This is a general guideline. Our medical staff will conduct a thorough screening during your visit to ensure your safety and the safety of blood recipients.</p>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
+
+        <!--- Contact Section --->
+        <section id="contact" class="contact">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Contact Us</h2>
+                    <p>Get in touch with our team</p>
+                </div>
+                <div class="contact-content">
+                    <div class="contact-info">
+                        <h3>Visit Us</h3>
+                        <div class="contact-details">
+                            <div class="contact-item">
+                                <h4>Address</h4>
+                                <p>123 LifeBlood Drive<br>Medical District<br>Nairobi City, Embakasi</p>
+                            </div>
+                            <div class="contact-item">
+                                <h4>Phone</h4>
+                                <p>+254 (0)780 800 800</p>
+                            </div>
+                            <div class="contact-item">
+                                <h4>Email</h4>
+                                <p>info@lifeblood.org</p>
+                            </div>
+                            <div>
+                                <h4>Hours</h4>
+                                <p>Monday - Friday: 8:00 AM - 6:00 PM<br>
+                                Saturday: 9:00 AM - 4:00 PM<br>
+                                Sunday: Closed</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="contact-form">
+                        <h3>Send Us a Message</h3>
+                        <form class="contactForm">
+                            <div class="form-group">
+                                <label for="contactName">Name</label>
+                                <input type="text" id="contactName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="contactEmail">Email</label>
+                                <input type="email" id="contactEmail" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="contactSubject">Subject</label>
+                                <input type="text" id="contactSubject" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="contactMessage">Message</label>
+                                <textarea id="contactMessage" rows="5" required></textarea>
+                            </div>
+                            <button type="submit" class="btn-primary btn-large">Send Message</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!--- Footer Section --->
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-section">
+                    <h3>LifeBlood</h3>
+                    <p>Saving lives through blood donation. Join our community of heroes and make a difference in someone's life today.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#learn">Learn</a></li>
+                        <li><a href="#donate">Donate</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="#eligibility">Eligibility</a></li>
+                        <li><a href="#hospital">Our Hospital</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Emergency</h4>
+                    <p>For urgent blood needs:</p>
+                    <p><strong>(254) 911-BLOOD</strong></p>
+                    <p>Available 24/7</p>
+                </div>
+                <div class="footer-bottom">
+                    <p>&copy; 2025 LifeBlood Blood Donation Center. All rights reserved.</p>
+                </div>
+            </div>
+        </footer>
+
+        <!--- Login Modal --->
+        <div id="loginModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Login</h2>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="loginEmail">Email</label>
+                        <input type="email" id="loginEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" id="loginPassword" required>
+                    </div>
+                    <button type="submit" class="btn-primary btn-large">Login</button>
+                    <p class="modal-link">Don't have an account? <a href="#">Sign up</a></p>
+                </form>
+            </div>
+        </div>
+
+        <!--- Sign Up Modal --->
+        <div id="signUpModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Sign Up</h2>
+                <form id="sign-upForm">
+                    <div class="form-group">
+                        <label for="signupName">Full Name</label>
+                        <input type="text" id="signupName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signupEmail">Email</label>
+                        <input type="email" id="signupEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signupPassword">Password</label>
+                        <input type="password" id="signupPassword" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm Password</label>
+                        <input type="password" id="confirmPassword" required>
+                    </div>
+                    <button type="submit" class="btn-primary btn-large">Sign Up</button>
+                    <p class="modal-link">Already have an account? <a href="#">Login</a></p>
+                </form>
+            </div>
+        </div>
+
+        <script src="views/scripts/index.js"></script>
     </body>
 </html>

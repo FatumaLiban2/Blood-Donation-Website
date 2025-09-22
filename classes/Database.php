@@ -47,4 +47,7 @@ class Database {
         return $this->connection;
     }
 
+    protected function disconnect() {
+        $this->connection = null;
+    }
 }
