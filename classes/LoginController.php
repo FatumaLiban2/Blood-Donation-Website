@@ -157,5 +157,44 @@ class LoginController {
             ];
         }
     }
+    
+    /**
+     * Check if session has expired
+     * Demonstrates: Time-based validation, configurable parameters
+     */
+    public function isSessionExpired($maxLifetime = 3600) {
+        if (!isset($_SESSION['login_time'])) {
+            return true;
+        }
+        
+        return (time() - $_SESSION['login_time']) > $maxLifetime;
+    }
+    
+    /**
+     * Require authentication for protected pages
+     * Demonstrates: Access control, HTTP redirection
+     */
+    public function requireLogin($redirectUrl = '/login.php') {
+        if (!$this->isLoggedIn() || $this->isSessionExpired()) {
+            if ($this->isSessionExpired()) {
+                $this->logout();
+            }
+            header("Location: $redirectUrl");
+            exit();
+        }
+    }
+    
+    /**
+     * Get formatted login status for debugging
+     * Demonstrates: Object state representation
+     */
+    public function getLoginStatus() {
+        return [
+            'logged_in' => $this->isLoggedIn(),
+            'session_expired' => $this->isSessionExpired(),
+            'current_user' => $this->getCurrentUser(),
+            'session_id' => session_id()
+        ];
+    }
 }
     
