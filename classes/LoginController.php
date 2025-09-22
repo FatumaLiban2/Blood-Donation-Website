@@ -127,9 +127,35 @@ class LoginController {
         ];
     }
     
+    /**
+     * Logout user and clean session
+     * Demonstrates: Complete session cleanup, error handling
+     */
     public function logout() {
-        // Session already started in constructor, no need to start again
-        session_destroy();
+        try {
+            // Clear all session variables
+            $_SESSION = [];
+            
+            // Delete session cookie if it exists
+            if (isset($_COOKIE[session_name()])) {
+                setcookie(session_name(), '', time() - 3600, '/');
+            }
+            
+            // Destroy the session
+            session_destroy();
+            
+            return [
+                'success' => true,
+                'message' => 'Successfully logged out'
+            ];
+            
+        } catch (Exception $e) {
+            error_log("Logout error: " . $e->getMessage());
+            return [
+                'success' => false,
+                'message' => 'Error during logout'
+            ];
+        }
     }
 }
     
