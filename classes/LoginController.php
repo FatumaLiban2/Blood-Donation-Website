@@ -34,6 +34,28 @@ class LoginController {
         }
     }
     
+    /**
+     * Validate login inputs
+     * Demonstrates: Method abstraction, validation logic
+     */
+    private function validateLoginInputs($username, $password) {
+        $errors = [];
+        
+        if (empty($username)) {
+            $errors[] = "Username is required";
+        }
+        
+        if (empty($password)) {
+            $errors[] = "Password is required";
+        }
+        
+        if (strlen($username) < 3) {
+            $errors[] = "Username must be at least 3 characters";
+        }
+        
+        return $errors;
+    }
+    
     public function login($username, $password) {
         $user = $this->findUserByUsername($username);
         
