@@ -6,6 +6,12 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Life Blood - Blood Donation Center</title>
         <link rel="stylesheet" href="views/styles/index.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wdth,wght@0,75..100,300..800;1,75..100,300..800&display=swap" rel="stylesheet">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap" rel="stylesheet">
     </head>
     <body>
         <nav class="navbar">
@@ -14,17 +20,17 @@
                     <h2>Life Blood</h2>
                 </div>
                 <ul class="nav-menu">
-                    <li><a href="#home">Home</a></li>
-                    <li><a href="#about">About</a></li>
-                    <li><a href="learn">Learn</a></li>
-                    <li><a href="#donate">Donate</a></li>
-                    <li><a href="#hospital">Hospital</a></li>
-                    <li><a href="#eligibility">Eligibility</a></li>
-                    <li><a href="#contact">Contact</a></li>
+                    <li><a class="nav-link" href="#home">Home</a></li>
+                    <li><a class="nav-link" href="#about">About</a></li>
+                    <li><a class="nav-link" href="#learn">Learn</a></li>
+                    <li><a class="nav-link" href="#donate">Donate</a></li>
+                    <li><a class="nav-link" href="#hospital">Our Hospital</a></li>
+                    <li><a class="nav-link" href="#eligibility">Eligibility</a></li>
+                    <li><a class="nav-link" href="#contact">Contact</a></li>
                 </ul>
                 <div class="nav-auth">
-                    <button>Login</button>
-                    <button>Sign Up</button>
+                    <button class="btn-secondary">Login</button>
+                    <button class="btn-primary">Sign Up</button>
                 </div>
             </div>
         </nav>
@@ -63,10 +69,9 @@
 
                         <h3>Why We Exist</h3>
                         <p>Every 2 seconds, someone in our country needs blood. Whether it's for emergency surgeries, cancer treatments, or chronic illnesses, blood donations are essential for saving lives. LifeBlood exists to make the donation process simple, safe, and rewarding for donors while maintaining the highest standards of care and safety.</p>
-
-                        <div class="about-img">
-                            <img src="resources/images/together.jpeg" alt="Helping hands" />
-                        </div>
+                    </div>
+                    <div class="about-img">
+                        <img src="resources/images/together.jpeg" alt="Helping hands" />
                     </div>
                 </div>
             </div>
@@ -92,7 +97,7 @@
                             <div class="blood-type-card">
                                 <h4>Type o+</h4>
                                 <p><strong>Most Common</strong>
-                                <p>Can donato to all positive blood types. About 37.4% of the population has O+ blood.</p>
+                                <p>Can donate to all positive blood types. About 37.4% of the population has O+ blood.</p>
                             </div>
                             <div class="blood-type-card">
                                 <h4>Type A-</h4>
@@ -132,7 +137,7 @@
                         <div class="process-image">
                             <img src="/resources/images/process.jpeg" alt="Blood testing laboratory" /> 
                         </div>
-                        <div class-name="process-steps">
+                        <div class="process-steps">
                             <div class="step">
                                 <div class="step-number">1</div>
                                 <div class="step-content">
@@ -240,18 +245,18 @@
                                 <p>Days between donations</p>
                             </div>
                         </div>
-                    </div>
-                    <div class="donations-benefits">
-                        <h4>Benefits of Donating:</h4>
-                        <ul>
-                            <li>Free health screening</li>
-                            <li>Burn calories about 650 calories per donation</li>
-                            <li>Improve cardiovascular health</li>
-                            <li>Feel good by helping others</li>
-                            <li>Free blood type testing</li>
-                            <li>Community impact</li>
-                            <li>Free refreshments</li>
-                        </ul>
+                        <div class="donation-benefits">
+                            <h4>Benefits of Donating:</h4>
+                            <ul>
+                                <li>Free health screening</li>
+                                <li>Burn calories about 650 calories per donation</li>
+                                <li>Improve cardiovascular health</li>
+                                <li>Feel good by helping others</li>
+                                <li>Free blood type testing</li>
+                                <li>Community impact</li>
+                                <li>Free refreshments</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
