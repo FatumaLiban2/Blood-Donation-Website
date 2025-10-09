@@ -67,4 +67,25 @@ class EmailService {
         
         return $this->sendEmail($to, $subject, $message);
     }
-    
+    /**
+     * Send appointment confirmation email
+     * 
+     * @param string $to Recipient email
+     * @param array $appointmentDetails Details about the appointment
+     * @return bool Success or failure
+     */
+    public function sendAppointmentConfirmation($to, $appointmentDetails) {
+        $subject = 'Your Blood Donation Appointment Confirmation';
+        
+        // Create HTML message
+        $message = "
+        <html>
+        <head>
+            <title>Blood Donation Appointment Confirmation</title>
+        </head>
+        <body>
+            <h2>Your Appointment is Confirmed!</h2>
+            <p>Dear {$appointmentDetails['name']},</p>
+            <p>Your blood donation appointment has been scheduled successfully.</p>
+            <p><strong>Appointment Details:</strong></p>
+            <ul>
