@@ -89,3 +89,15 @@ class EmailService {
             <p>Your blood donation appointment has been scheduled successfully.</p>
             <p><strong>Appointment Details:</strong></p>
             <ul>
+            <li>Date: {$appointmentDetails['date']}</li>
+                <li>Time: {$appointmentDetails['time']}</li>
+                <li>Location: {$appointmentDetails['location']}</li>
+            </ul>
+            <p><strong>Preparation Tips:</strong></p>
+            <ul>
+                <li>Get a good night's sleep</li>
+                <li>Eat a healthy meal before your appointment</li>
+                <li>Drink plenty of water</li>
+                <li>Bring a valid ID</li>
+            </ul>
+            <p>If you need to reschedule, please contact us at least 24 hours in advance.</p>
