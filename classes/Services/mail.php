@@ -25,7 +25,15 @@ class EmailService {
      * @param array $headers Additional headers
      * @return bool Success or failure
      */
-    // Add any additional headers
+    public function sendEmail($to, $subject, $message, $additionalHeaders = []) {
+        // Set headers
+        $headers = [
+            'MIME-Version: 1.0',
+            'Content-type: text/html; charset=utf-8',
+            'From: ' . $this->fromName . ' <' . $this->fromEmail . '>'
+        ];
+        
+        // Add any additional headers
         $headers = array_merge($headers, $additionalHeaders);
         
         // Send email
@@ -67,6 +75,7 @@ class EmailService {
         
         return $this->sendEmail($to, $subject, $message);
     }
+    
     /**
      * Send appointment confirmation email
      * 
@@ -89,7 +98,7 @@ class EmailService {
             <p>Your blood donation appointment has been scheduled successfully.</p>
             <p><strong>Appointment Details:</strong></p>
             <ul>
-            <li>Date: {$appointmentDetails['date']}</li>
+                <li>Date: {$appointmentDetails['date']}</li>
                 <li>Time: {$appointmentDetails['time']}</li>
                 <li>Location: {$appointmentDetails['location']}</li>
             </ul>
@@ -101,3 +110,37 @@ class EmailService {
                 <li>Bring a valid ID</li>
             </ul>
             <p>If you need to reschedule, please contact us at least 24 hours in advance.</p>
+            <p>Thank you for your commitment to saving lives!</p>
+            <p>Sincerely,<br>The Blood Donation Team</p>
+        </body>
+        </html>
+        ";
+        
+        return $this->sendEmail($to, $subject, $message);
+    }
+}
+
+// Example usage (you can comment this out when integrating with your application)
+/*
+$emailService = new EmailService();
+
+// Example donation confirmation
+$donationDetails = [
+    'name' => 'John Doe',
+    'date' => date('Y-m-d'),
+    'blood_type' => 'O+',
+    'location' => 'Central Blood Bank',
+    'next_date' => date('Y-m-d', strtotime('+56 days'))
+];
+$emailService->sendDonationConfirmation('recipient@example.com', $donationDetails);
+
+// Example appointment confirmation
+$appointmentDetails = [
+    'name' => 'Jane Smith',
+    'date' => '2025-10-15',
+    'time' => '10:00 AM',
+    'location' => 'Central Blood Bank'
+];
+$emailService->sendAppointmentConfirmation('recipient@example.com', $appointmentDetails);
+*/
+?>
