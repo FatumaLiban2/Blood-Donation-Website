@@ -29,8 +29,8 @@
                     <li><a class="nav-link" href="#contact">Contact</a></li>
                 </ul>
                 <div class="nav-auth">
-                    <button class="btn-secondary">Login</button>
-                    <button class="btn-primary">Sign Up</button>
+                    <button id="loginButton" class="btn-secondary">Login</button>
+                    <button id="signupButton" class="btn-primary">Sign Up</button>
                 </div>
             </div>
         </nav>
@@ -42,8 +42,8 @@
                     <h1>Save Lives Through Blood Donations</h1>
                     <p>Your donation can save up to three lives. Join our community of heroes and make a difference today.</p>
                     <div class="hero-buttons">
-                        <button class="btn-primary btn-large">Donate Now</button>
-                        <button class="btn-secondary btn-large">Learn More</button>
+                        <button id="donateButtonHero" class="btn-primary btn-large">Donate Now</button>
+                        <button id="learnButtonHero" class="btn-secondary btn-large">Learn More</button>
                     </div>
                 </div>
                 <div class="hero-image">
@@ -184,7 +184,7 @@
                         <h3>Shedule Your Appointment</h3>
                         <form id="donationForm">
                             <div class="form-group">
-                                <label for="fullName">Full Name</label>
+                                <label for="fullname">Full Name</label>
                                 <input type="text" id="fullname" name="fullName" required>
                             </div>
                             <div class="form-group">
@@ -370,7 +370,7 @@
                                     <li>You've eaten in the last 4 hours</li>
                                 </ul>
                             </div>
-                            <div class="guideline-card" not-eligible>
+                            <div class="guideline-card not-eligible">
                                 <h4>You CANNOT Donate If:</h4>
                                 <ul>
                                     <li>You have a cold, flu, or fever</li>
@@ -451,33 +451,35 @@
         <!--- Footer Section --->
         <footer class="footer">
             <div class="container">
-                <div class="footer-section">
-                    <h3>LifeBlood</h3>
-                    <p>Saving lives through blood donation. Join our community of heroes and make a difference in someone's life today.</p>
-                </div>
-                <div class="footer-section">
-                    <h4>Quick Links</h4>
-                    <ul>
-                        <li><a href="#home">Home</a></li>
-                        <li><a href="#about">About</a></li>
-                        <li><a href="#learn">Learn</a></li>
-                        <li><a href="#donate">Donate</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>Resources</h4>
-                    <ul>
-                        <li><a href="#eligibility">Eligibility</a></li>
-                        <li><a href="#hospital">Our Hospital</a></li>
-                        <li><a href="#contact">Contact</a></li>
-                        <li><a href="#">Privacy Policy</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>Emergency</h4>
-                    <p>For urgent blood needs:</p>
-                    <p><strong>(254) 911-BLOOD</strong></p>
-                    <p>Available 24/7</p>
+                <div class="footer-grid">
+                    <div class="footer-section">
+                        <h3>LifeBlood</h3>
+                        <p>Saving lives through blood donation. Join our community of heroes and make a difference in someone's life today.</p>
+                    </div>
+                    <div class="footer-section">
+                        <h4>Quick Links</h4>
+                        <ul>
+                            <li><a href="#home">Home</a></li>
+                            <li><a href="#about">About</a></li>
+                            <li><a href="#learn">Learn</a></li>
+                            <li><a href="#donate">Donate</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-section">
+                        <h4>Resources</h4>
+                        <ul>
+                            <li><a href="#eligibility">Eligibility</a></li>
+                            <li><a href="#hospital">Our Hospital</a></li>
+                            <li><a href="#contact">Contact</a></li>
+                            <li><a href="#">Privacy Policy</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-section">
+                        <h4>Emergency</h4>
+                        <p>For urgent blood needs:</p>
+                        <p><strong>(254) 911-BLOOD</strong></p>
+                        <p>Available 24/7</p>
+                    </div>
                 </div>
                 <div class="footer-bottom">
                     <p>&copy; 2025 LifeBlood Blood Donation Center. All rights reserved.</p>
@@ -488,7 +490,7 @@
         <!--- Login Modal --->
         <div id="loginModal" class="modal">
             <div class="modal-content">
-                <span class="close">&times;</span>
+                <span id="closeLogin" class="close">&times;</span>
                 <h2>Login</h2>
                 <form id="loginForm">
                     <div class="form-group">
@@ -499,21 +501,30 @@
                         <label for="loginPassword">Password</label>
                         <input type="password" id="loginPassword" required>
                     </div>
-                    <button type="submit" class="btn-primary btn-large">Login</button>
-                    <p class="modal-link">Don't have an account? <a href="#">Sign up</a></p>
+                    <button id="loginSubmit" type="submit" class="btn-primary btn-large">Login</button>
+                    <p class="forgot-pass">Forgot Password?</p>
+                    <p id="toSignup" class="modal-link">Don't have an account? <span>Sign up</span></p>
                 </form>
             </div>
         </div>
 
         <!--- Sign Up Modal --->
-        <div id="signUpModal" class="modal">
+        <div id="signupModal" class="modal">
             <div class="modal-content">
-                <span class="close">&times;</span>
+                <span id="closeSignup" class="close">&times;</span>
                 <h2>Sign Up</h2>
                 <form id="sign-upForm">
                     <div class="form-group">
-                        <label for="signupName">Full Name</label>
-                        <input type="text" id="signupName" required>
+                        <label for="firstName">First Name</label>
+                        <input type="text" id="firstName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" id="lastName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="telephone">Telephone</label>
+                        <input type="text" id="telephone" required>
                     </div>
                     <div class="form-group">
                         <label for="signupEmail">Email</label>
@@ -527,8 +538,8 @@
                         <label for="confirmPassword">Confirm Password</label>
                         <input type="password" id="confirmPassword" required>
                     </div>
-                    <button type="submit" class="btn-primary btn-large">Sign Up</button>
-                    <p class="modal-link">Already have an account? <a href="#">Login</a></p>
+                    <button id="signupSubmit" type="submit" class="btn-primary btn-large">Sign Up</button>
+                    <p id="toLogin" class="modal-link">Already have an account? <span>Login</a></p>
                 </form>
             </div>
         </div>
