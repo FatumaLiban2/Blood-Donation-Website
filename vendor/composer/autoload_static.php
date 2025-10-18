@@ -24,6 +24,7 @@ class ComposerStaticInite875ae8441d070d7dda5f4b47a2117aa
         array (
             'PhpOption\\' => 10,
             'ParagonIE\\Sodium\\' => 17,
+            'PHPMailer\\PHPMailer\\' => 20,
         ),
         'G' => 
         array (
@@ -59,6 +60,10 @@ class ComposerStaticInite875ae8441d070d7dda5f4b47a2117aa
         'ParagonIE\\Sodium\\' => 
         array (
             0 => __DIR__ . '/..' . '/paragonie/sodium_compat/namespaced',
+        ),
+        'PHPMailer\\PHPMailer\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phpmailer/phpmailer/src',
         ),
         'GrahamCampbell\\ResultType\\' => 
         array (
