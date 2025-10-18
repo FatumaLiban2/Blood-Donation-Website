@@ -56,4 +56,23 @@ class Patient {
 
         return $row ? self::fromDatabase($row) : null;
     }
+
+    public static function findById($id): ?self {
+        $db = Database::getInstance();
+        $sql = "SELECT * FROM patients WHERE id = ?";
+        $stmt = $db->getConnection()->prepare($sql);
+        $stmt->execute([$id]);
+        
+        $row = $stmt->fetch();
+
+        return $row ? self::fromDatabase($row) : null;
+    }
+
+    public static function verifyPassword($email, $password): bool {
+        $patient = self::findByEmail($email);
+        if ($patient && password_verify($password, $patient->password)) {
+            return true;
+        }
+        return false;
+    }
 }
