@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-class RandomCode {
+class OTPCode {
 
     // Function to generate a 6 digit OTP-CODE
     public static function generate(): string {

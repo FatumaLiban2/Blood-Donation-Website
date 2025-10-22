@@ -31,10 +31,10 @@ class Mail {
         $this->mail->setFrom(SMTP_USER, 'Blood Life Donation');
     }
     
-    public function sendOTPMail($recipient_email, $name, $code) {
+    public function sendOTPMail($name, $code) {
         try {
             // Recipient Info
-            $this->mail->addAddress($recipient_email, $name);
+            $this->mail->addAddress($this->recipient_email, $name);
 
             // Email content
             $this->mail->isHTML(true);
