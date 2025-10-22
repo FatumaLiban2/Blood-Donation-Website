@@ -1,146 +1,222 @@
 <?php
-// Include necessary files
-require_once 'autoload.php';
-require_once 'config/config.php';
 
-// Use PHPMailer if you have it installed (recommended)
-// If not, we can use PHP's mail() function
+namespace Services;
 
-class EmailService {
-    private $fromEmail;
-    private $fromName;
-    
-    public function __construct() {
-        // Set default sender details
-        $this->fromEmail = 'noreply@blooddonation.com'; // Replace with your actual email
-        $this->fromName = 'Blood Donation Service';
+require_once "../../autoload.php";
+require_once "../../config/config.php";
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\SMTP;
+
+class Mail {
+    private $mail;
+    private $recipient_email;
+
+
+    public function __construct($recipient_email) {
+        $this->mail = new PHPMailer(true);
+        $this->recipient_email = $recipient_email;
+
+        // Server settings
+        $this->mail->isSMTP();
+        $this->mail->Host = SMTP_HOST;
+        $this->mail->SMTPAuth = true;
+        $this->mail->Username = SMTP_USER;
+        $this->mail->Password = SMTP_PASSWORD;
+        $this->mail->SMTPSecure = SMTP_ENCRYPTION;
+        $this->mail->Port = SMTP_PORT;
+
+        // Sender info
+        $this->mail->setFrom(SMTP_USER, 'Blood Life Donation');
     }
     
-    /**
-     * Send email using PHP's mail function
-     * 
-     * @param string $to Recipient email
-     * @param string $subject Email subject
-     * @param string $message Email body
-     * @param array $headers Additional headers
-     * @return bool Success or failure
-     */
-    public function sendEmail($to, $subject, $message, $additionalHeaders = []) {
-        // Set headers
-        $headers = [
-            'MIME-Version: 1.0',
-            'Content-type: text/html; charset=utf-8',
-            'From: ' . $this->fromName . ' <' . $this->fromEmail . '>'
-        ];
-        
-        // Add any additional headers
-        $headers = array_merge($headers, $additionalHeaders);
-        
-        // Send email
-        return mail($to, $subject, $message, implode("\r\n", $headers));
+    public function sendOTPMail($recipient_email, $name, $code) {
+        try {
+            // Recipient Info
+            $this->mail->addAddress($recipient_email, $name);
+
+            // Email content
+            $this->mail->isHTML(true);
+            $this->mail->Subject = 'Blood Life Donation - OTP Verification Code';
+            $this->mail->Body = $this->getOtpEmailTemplate($name, $code);
+        } catch (Exception $e) {
+            echo "Message could not be sent. Mailer Error: {$this->mail->ErrorInfo}";
+            return false;
+        }
     }
     
-    /**
-     * Send donation confirmation email
-     * 
-     * @param string $to Recipient email
-     * @param array $donationDetails Details about the donation
-     * @return bool Success or failure
-     */
-    public function sendDonationConfirmation($to, $donationDetails) {
-        $subject = 'Thank You for Your Blood Donation';
-        
-        // Create HTML message
-        $message = "
-        <html>
-        <head>
-            <title>Thank You for Your Blood Donation</title>
-        </head>
-        <body>
-            <h2>Thank You for Your Blood Donation!</h2>
-            <p>Dear {$donationDetails['name']},</p>
-            <p>Thank you for your recent blood donation. Your generosity helps save lives!</p>
-            <p><strong>Donation Details:</strong></p>
-            <ul>
-                <li>Date: {$donationDetails['date']}</li>
-                <li>Blood Type: {$donationDetails['blood_type']}</li>
-                <li>Location: {$donationDetails['location']}</li>
-            </ul>
-            <p>Your next eligible donation date will be: {$donationDetails['next_date']}</p>
-            <p>Thank you again for your life-saving gift!</p>
-            <p>Sincerely,<br>The Blood Donation Team</p>
-        </body>
-        </html>
-        ";
-        
-        return $this->sendEmail($to, $subject, $message);
-    }
-    
-    /**
-     * Send appointment confirmation email
-     * 
-     * @param string $to Recipient email
-     * @param array $appointmentDetails Details about the appointment
-     * @return bool Success or failure
-     */
-    public function sendAppointmentConfirmation($to, $appointmentDetails) {
-        $subject = 'Your Blood Donation Appointment Confirmation';
-        
-        // Create HTML message
-        $message = "
-        <html>
-        <head>
-            <title>Blood Donation Appointment Confirmation</title>
-        </head>
-        <body>
-            <h2>Your Appointment is Confirmed!</h2>
-            <p>Dear {$appointmentDetails['name']},</p>
-            <p>Your blood donation appointment has been scheduled successfully.</p>
-            <p><strong>Appointment Details:</strong></p>
-            <ul>
-                <li>Date: {$appointmentDetails['date']}</li>
-                <li>Time: {$appointmentDetails['time']}</li>
-                <li>Location: {$appointmentDetails['location']}</li>
-            </ul>
-            <p><strong>Preparation Tips:</strong></p>
-            <ul>
-                <li>Get a good night's sleep</li>
-                <li>Eat a healthy meal before your appointment</li>
-                <li>Drink plenty of water</li>
-                <li>Bring a valid ID</li>
-            </ul>
-            <p>If you need to reschedule, please contact us at least 24 hours in advance.</p>
-            <p>Thank you for your commitment to saving lives!</p>
-            <p>Sincerely,<br>The Blood Donation Team</p>
-        </body>
-        </html>
-        ";
-        
-        return $this->sendEmail($to, $subject, $message);
+    public function getOtpEmailTemplate($name, $code) {
+        return "
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>Verify Your Email</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+        }
+        .header {
+            background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+            padding: 40px 20px;
+            text-align: center;
+        }
+        .header h1 {
+            color: #ffffff;
+            margin: 0;
+            font-size: 28px;
+            font-weight: 600;
+        }
+        .header .tagline {
+            color: #fecaca;
+            margin: 8px 0 0 0;
+            font-size: 14px;
+        }
+        .content {
+            padding: 40px 30px;
+        }
+        .greeting {
+            font-size: 18px;
+            color: #1f2937;
+            margin-bottom: 20px;
+        }
+        .message {
+            font-size: 16px;
+            color: #4b5563;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+        .otp-container {
+            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+            border: 2px dashed #dc2626;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            margin: 30px 0;
+        }
+        .otp-label {
+            font-size: 14px;
+            color: #991b1b;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        .otp-code {
+            font-size: 36px;
+            font-weight: 700;
+            color: #dc2626;
+            letter-spacing: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+        }
+        .expiry {
+            font-size: 13px;
+            color: #991b1b;
+            margin-top: 12px;
+        }
+        .warning-box {
+            background-color: #fffbeb;
+            border-left: 4px solid #f59e0b;
+            padding: 15px;
+            margin: 25px 0;
+            border-radius: 4px;
+        }
+        .warning-box p {
+            margin: 0;
+            font-size: 14px;
+            color: #92400e;
+            line-height: 1.5;
+        }
+        .footer {
+            background-color: #f9fafb;
+            padding: 30px;
+            text-align: center;
+            border-top: 1px solid #e5e7eb;
+        }
+        .footer p {
+            margin: 8px 0;
+            font-size: 13px;
+            color: #6b7280;
+        }
+        .footer a {
+            color: #dc2626;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        @media only screen and (max-width: 600px) {
+            .content {
+                padding: 30px 20px;
+            }
+            .otp-code {
+                font-size: 32px;
+                letter-spacing: 6px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class='email-container'>
+        <!-- Header -->
+        <div class='header'>
+            <h1>Life Blood</h1>
+            <p class='tagline'>Save Lives Through Blood Donations</p>
+        </div>
+
+        <!-- Content -->
+        <div class='content'>
+            <p class='greeting'>Hello {$name},</p>
+            
+            <p class='message'>
+                Thank you for registering with Life Blood. To complete your registration and verify your email address, please use the One-Time Password (OTP) below:
+            </p>
+
+            <!-- OTP Box -->
+            <div class='otp-container'>
+                <div class='otp-label'>Your Verification Code</div>
+                <div class='otp-code'>{$code}</div>
+                <div class='expiry'>⏰ This code expires in 10 minutes</div>
+            </div>
+
+            <p class='message'>
+                Enter this code on the verification page to continue. If you didn't request this code, please ignore this email or contact our support team.
+            </p>
+
+            <!-- Warning Box -->
+            <div class='warning-box'>
+                <p>
+                    <strong>🔒 Security Reminder:</strong> Never share this code with anyone. Our team will never ask you for this code via phone, email, or text message.
+                </p>
+            </div>
+
+            <p class='message'>
+                Thank you for joining Life Blood. Your donation can save up to three lives. Every donation makes a difference!
+            </p>
+        </div>
+
+        <!-- Footer -->
+        <div class='footer'>
+            <p><strong>Life Blood</strong></p>
+            <p>Questions? Contact us at <a href='mailto:support@lifeblood.org'>support@lifeblood.org</a></p>
+            <p style='margin-top: 20px; font-size: 12px;'>
+                This is an automated message. Please do not reply to this email.
+            </p>
+        </div>
+    </div>
+</body>
+</html>
+    ";
     }
 }
-
-// Example usage (you can comment this out when integrating with your application)
-/*
-$emailService = new EmailService();
-
-// Example donation confirmation
-$donationDetails = [
-    'name' => 'John Doe',
-    'date' => date('Y-m-d'),
-    'blood_type' => 'O+',
-    'location' => 'Central Blood Bank',
-    'next_date' => date('Y-m-d', strtotime('+56 days'))
-];
-$emailService->sendDonationConfirmation('recipient@example.com', $donationDetails);
-
-// Example appointment confirmation
-$appointmentDetails = [
-    'name' => 'Jane Smith',
-    'date' => '2025-10-15',
-    'time' => '10:00 AM',
-    'location' => 'Central Blood Bank'
-];
-$emailService->sendAppointmentConfirmation('recipient@example.com', $appointmentDetails);
-*/
-?>
