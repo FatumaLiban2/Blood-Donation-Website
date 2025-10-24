@@ -1,41 +1,118 @@
 <?php
-
 require_once "../autoload.php";
+Class SessionManager{
+    private const SESSION_COOKIE_NAME = "auth_token";
+    private const REFRESH_TOKEN_COOKIE_NAME ='refresh_token';
+    private const COOKIE_LIFETIME =3600;//1 hour
+    private const REFRESH_TOKEN_LIFETIME = 604800; //7days
 
-/**
- * SessionManager class handles user sessions and authentication
- * Implements singleton pattern for centralized session management
- */
-class SessionManager {
-    
-    private static ?SessionManager $instance = null;
-    
-    /**
-     * Private constructor to implement singleton pattern
-     */
-    private function __construct() {
-        // Constructor logic will be added in next steps
-    }
-    
-    /**
-     * Get singleton instance of SessionManager
-     */
-    public static function getInstance(): SessionManager {
-        if (self::$instance === null) {
-            self::$instance = new self();
+    public static function startSession(int $patient_id,string $email, bool $rememberMe = false): array {
+
+        $accessToken =JWT::generateToken($patient_id,$email);
+        $cookieLifetime =$rememberMe ? self::REFRESH_TOKEN_LIFETIME : self::COOKIE_LIFETIME;
+        self::setSecureCookie(self::SESSION_COOKIE_NAME,$accessToken, $cookieLifetime);
+        if ($rememberMe) {
+            $refreshToken = self::generateRefreshToken($patient_id, $email);
+            self::setSecureCookie(self::REFRESH_TOKEN_COOKIE_NAME, $refereshToken, self::REFRESH_TOKEN_LIFETIME);
         }
-        return self::$instance;
+        return [
+            'success' => true,
+            'access_token' => $accessToken,
+            'expires_in' => self::COOKIE_LIFETIME
+        ];
+    }
+    //validating the user current session
+    public static function validateSession():?object{
+        // Try to get token from cookie first
+
+        $token = self::getTokenFromCookie();
+          // If no cookie, try Authorization header
+        if (!$token) {
+            return self:: getTokenFromHeadeer();
+        }
+        if (!$token){
+            return null;
+        }
+        //verify token
+        $decoded =JWT::verifyToken($token);
+        if (!$decoded){
+            //Token invalid, try to refresh if refresh token exists
+            return self::attemptTokenRefresh();
+        }
+        return $decoded;
+
+    /**
+     * Get current patient ID from session
+     */
+
+    public static function getCurrentPatientId(): ?int {
+        $session = self::validateSession();
+        return $session ? $session->patient_id : null;
+    }
+     
+    /**
+     * Get current patient email from session
+     */
+    public static function getCurrentEmail(): ?string {
+        $session = self::validateSession();
+        return $session ? $session->email : null;
+    }
+    /**
+     * Check if user is authenticated
+     */
+    public static function isAuthenticated(): bool {
+        return self::validateSession() !== null;
     }
     
     /**
-     * Prevent cloning of the instance
+     *  * Require authentication - redirect if not authenticated
      */
-    private function __clone() {}
+    public static requireAuth(string $redirecturl = '/login.php') void{
+        if (!self::isAuthenticated()) {
+            header("Location: $redirectUrl");
+            exit();
+        }
+    }
+  /**
+     * Refresh session token
+     */
+public static function refreshSession(): ?array {
+    $refreshToken = $_COOKIE[self::REFRESH_TOKEN_COOKIE_NAME] ?? null;
+
+    if (!$refreshToken) {
+        return null;
+    }
+    $decoded = JWT::verifyToken($refreshToken);
+    if (!$decoded || !isset($decoded->patient_id,$decoded-email)) {
+        return null;
+    }
+    // Generate new access token
+        return self::startSession($decoded->patient_id, $decoded->email, true);
+    }
     
     /**
-     * Prevent unserializing of the instance
+     * End current session
      */
-    public function __wakeup() {
-        throw new Exception("Cannot unserialize a singleton.");
+    
+
+
+
+
+
+
+
+
+   
+
+        
+
     }
+
+}
+
+
+
+
+}
+
 }
