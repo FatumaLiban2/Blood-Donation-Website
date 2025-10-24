@@ -189,7 +189,49 @@ return [
     private static function getTokenFromCookie(): ?string {
         return $_COOKIE[self::SESSION_COOKIE_NAME] ?? null;
     }
+    /**
+     * Get token from Authorization header
+     */
+    private static function getTokenFromHeader(): ?string {
+        $headers = getallheaders();
+        
+        if (isset($headers['Authorization'])) {
+            if (preg_match('/Bearer\s+(.+)/', $headers['Authorization'], $matches)) {
+                return $matches[1];
+            }
+        }
+        
+        return null;
+    }
     
+    /**
+     * Set secure HTTP-only cookie
+     */
+    private static function setSecureCookie(string $name, string $value, int $lifetime): void {
+        $options = [
+            'expires' => time() + $lifetime,
+            'path' => '/',
+            'domain' => '', // Set your domain here
+            'secure' => true, // Only send over HTTPS
+            'httponly' => true, // Not accessible via JavaScript
+ 'samesite' => 'Strict' // CSRF protection
+        ];
+        
+        setcookie($name, $value, $options);
+    }
+    
+    /**
+     * Delete cookie
+     */
+    private static function deleteCookie(string $name): void {
+        if (isset($_COOKIE[$name])) {
+            setcookie($name, '', time() - 3600, '/');
+            unset($_COOKIE[$name]);
+        }
+    }
+}
+
+
 
 
 
