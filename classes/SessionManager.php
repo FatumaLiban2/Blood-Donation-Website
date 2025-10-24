@@ -93,6 +93,102 @@ public static function refreshSession(): ?array {
     /**
      * End current session
      */
+    public static function endSession(): bool {
+        // Delete cookies
+        self::deleteCookie(self::SESSION_COOKIE_NAME);
+        self::deleteCookie(self::REFRESH_TOKEN_COOKIE_NAME);
+        
+        // In production, you might want to blacklist the tokens in database/Redis
+        
+        return true;
+    }
+    
+    /**
+     * Update session with new data (e.g., after profile update)
+*/
+    public static function updateSession(int $patient_id, string $email): ?array {
+        $currentSession = self::validateSession();
+        
+        if (!$currentSession) {
+            return null;
+        }
+        
+        // Check if remember me was enabled
+        $rememberMe = isset($_COOKIE[self::REFRESH_TOKEN_COOKIE_NAME]);
+        
+        return self::startSession($patient_id, $email, $rememberMe);
+    }
+    
+    /**
+     * Get session data as array
+     */
+    public static function getSessionData(): ?array {
+        $session = self::validateSession();
+        
+        if (!$session) {
+            return null;
+        }
+return [
+            'patient_id' => $session->patient_id,
+            'email' => $session->email,
+            'issued_at' => $session->iat ?? null,
+            'expires_at' => $session->exp ?? null
+        ];
+    }
+    
+    /**
+     * Check if session is about to expire (within 5 minutes)
+     */
+    public static function isSessionExpiringSoon(): bool {
+        $session = self::validateSession();
+        
+        if (!$session || !isset($session->exp)) {
+            return false;
+        }
+        
+        $timeRemaining = $session->exp - time();
+        return $timeRemaining > 0 && $timeRemaining < 300; // 5 minutes
+    }
+
+    // PRIVATE HELPER METHODS
+
+    /**
+     * Generate refresh token with longer expiration
+     */
+    private static function generateRefreshToken(int $patient_id, string $email): string {
+        // You might want to add a 'type' => 'refresh' to the payload
+        // For now, using the same JWT generation
+        return JWT::generateToken($patient_id, $email);
+    }
+    
+ /**
+     * Attempt to refresh token automatically
+     */
+    private static function attemptTokenRefresh(): ?object {
+        $refreshToken = $_COOKIE[self::REFRESH_TOKEN_COOKIE_NAME] ?? null;
+        
+        if (!$refreshToken) {
+            return null;
+        }
+        
+        $decoded = JWT::verifyToken($refreshToken);
+        
+        if (!$decoded) {
+            return null;
+        }
+        
+        // Generate new access token
+        $newToken = JWT::generateToken($decoded->patient_id, $decoded->email);
+        self::setSecureCookie(self::SESSION_COOKIE_NAME, $newToken, self::COOKIE_LIFETIME);
+        
+        return $decoded;
+    }
+    /**
+     * Get token from cookie
+     */
+    private static function getTokenFromCookie(): ?string {
+        return $_COOKIE[self::SESSION_COOKIE_NAME] ?? null;
+    }
     
 
 
@@ -102,17 +198,3 @@ public static function refreshSession(): ?array {
 
 
 
-   
-
-        
-
-    }
-
-}
-
-
-
-
-}
-
-}
