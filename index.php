@@ -492,14 +492,14 @@
             <div class="modal-content">
                 <span id="closeLogin" class="close">&times;</span>
                 <h2>Login</h2>
-                <form id="loginForm">
+                <form id="loginForm" action="handlers/loginHandler.php" method="post">
                     <div class="form-group">
                         <label for="loginEmail">Email</label>
-                        <input type="email" id="loginEmail" required>
+                        <input type="email" id="loginEmail" name="loginEmail" required>
                     </div>
                     <div class="form-group">
                         <label for="loginPassword">Password</label>
-                        <input type="password" id="loginPassword" required>
+                        <input type="password" id="loginPassword" name="loginPassword" required>
                     </div>
                     <button id="loginSubmit" type="submit" class="btn-primary btn-large">Login</button>
                     <p class="forgot-pass">Forgot Password?</p>
@@ -513,36 +513,56 @@
             <div class="modal-content">
                 <span id="closeSignup" class="close">&times;</span>
                 <h2>Sign Up</h2>
-                <form id="sign-upForm">
+                <form id="sign-upForm" action="handlers/signupHandler.php" method="post">
                     <div class="form-group">
                         <label for="firstName">First Name</label>
-                        <input type="text" id="firstName" required>
+                        <input type="text" id="firstName" name="firstName" required>
                     </div>
                     <div class="form-group">
                         <label for="lastName">Last Name</label>
-                        <input type="text" id="lastName" required>
+                        <input type="text" id="lastName" name="lastName" required>
                     </div>
                     <div class="form-group">
                         <label for="telephone">Telephone</label>
-                        <input type="text" id="telephone" required>
+                        <input type="text" id="telephone" name="telephone" required>
                     </div>
                     <div class="form-group">
                         <label for="signupEmail">Email</label>
-                        <input type="email" id="signupEmail" required>
+                        <input type="email" id="signupEmail" name="signupEmail" required>
                     </div>
                     <div class="form-group">
                         <label for="signupPassword">Password</label>
-                        <input type="password" id="signupPassword" required>
+                        <input type="password" id="signupPassword" name="signupPassword" required>
                     </div>
                     <div class="form-group">
                         <label for="confirmPassword">Confirm Password</label>
-                        <input type="password" id="confirmPassword" required>
+                        <input type="password" id="confirmPassword" name="confirmPassword" required>
                     </div>
-                    <button id="signupSubmit" type="submit" class="btn-primary btn-large">Sign Up</button>
+                    <button id="signupSubmit" type="submit" name="signupSubmit" value="signupSubmit" class="btn-primary btn-large">Sign Up</button>
                     <p id="toLogin" class="modal-link">Already have an account? <span>Login</a></p>
                 </form>
             </div>
         </div>
+
+        <!--- Signup Verification Modal --->
+        <div id="signupVerificationModal" class="modal">
+            <div class="modal-content">
+                <span id="closeSignupVerification" class="close">&times;</span>
+                <h2>Enter Verification Code</h2>
+                <p>A verification code has been sent to your email. Please enter it below to complete your registration.</p>
+                <form id="verificationForm" action="handlers/verificationHandler.php" method="post">
+                    <div class="form-group">
+                        <label for="verificationCode">Verification Code</label>
+                        <input type="text" id="verificationCode" name="verificationCode" required>
+                    </div>
+                    <button id="verifyCode" type="submit" name="verifyCodeSubmit" class="btn-primary btn-large">Verify Code</button>
+                    <p id="resendCode" class="modal-link">Didn't receive the code? <span>Resend Code</span></p>
+                </form>
+            </div>
+        </div>
+
+        <!--- Toast Notification --->
+        <div id="toastContainer" class="toast"></div>
 
         <script src="views/scripts/index.js"></script>
     </body>

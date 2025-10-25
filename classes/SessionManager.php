@@ -8,13 +8,13 @@ Class SessionManager {
     private const COOKIE_LIFETIME =3600; //1 hour
     private const REFRESH_TOKEN_LIFETIME = 604800; //7days
 
-    public static function startSession(int $patient_id,string $email, bool $rememberMe = true): array {
+    public static function startSession(int $patient_id, string $email, bool $rememberMe = true): array {
 
-        $accessToken =JWT::generateToken($patient_id,$email);
+        $accessToken = JWT::generateToken($patient_id, $email);
 
-        $cookieLifetime =$rememberMe ? self::REFRESH_TOKEN_LIFETIME : self::COOKIE_LIFETIME;
+        $cookieLifetime = $rememberMe ? self::REFRESH_TOKEN_LIFETIME : self::COOKIE_LIFETIME;
 
-        self::setSecureCookie(self::SESSION_COOKIE_NAME,$accessToken, $cookieLifetime);
+        self::setSecureCookie(self::SESSION_COOKIE_NAME, $accessToken, $cookieLifetime);
 
         if ($rememberMe) {
             $refreshToken = self::generateRefreshToken($patient_id, $email);

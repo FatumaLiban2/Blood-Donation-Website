@@ -57,15 +57,17 @@ class Patient {
         return $row ? self::fromDatabase($row) : null;
     }
 
-    public static function findById($id): ?self {
+    public static function findId($email): int {
         $db = Database::getInstance();
-        $sql = "SELECT * FROM patients WHERE id = ?";
+        $sql = "SELECT * FROM patients WHERE email = ?";
         $stmt = $db->getConnection()->prepare($sql);
-        $stmt->execute([$id]);
+        $stmt->execute([$email]);
         
         $row = $stmt->fetch();
 
-        return $row ? self::fromDatabase($row) : null;
+        $fetchedId = (int) $row['id'];
+
+        return $fetchedId;
     }
 
     public static function verifyPassword($email, $password): bool {
@@ -74,5 +76,12 @@ class Patient {
             return true;
         }
         return false;
+    }
+
+    public static function markAsVerified($patientId): bool {
+        $db = Database::getInstance();
+        $sql = "UPDATE patients SET is_verified = TRUE, verified_at = NOW() WHERE id = ?";
+        $stmt = $db->getConnection()->prepare($sql);
+        return $stmt->execute([$patientId]);
     }
 }
