@@ -40,6 +40,7 @@ class Mail {
             $this->mail->isHTML(true);
             $this->mail->Subject = 'Blood Life Donation - OTP Verification Code';
             $this->mail->Body = $this->getOtpEmailTemplate($name, $code);
+            return true;
         } catch (Exception $e) {
             echo "Message could not be sent. Mailer Error: {$this->mail->ErrorInfo}";
             return false;

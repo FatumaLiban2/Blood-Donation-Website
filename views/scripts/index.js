@@ -14,6 +14,14 @@ document.addEventListener("DOMContentLoaded", function() {
     const toLoginbtn = document.getElementById("toLogin");
     const toSignupbtn = document.getElementById("toSignup");
 
+    const signupVerificationModal = document.getElementById("signupVerificationModal");
+    const closeSignupVerification = document.getElementById("closeSignupVerification");
+
+    const urlParams = new URLSearchParams(window.location.search);
+
+    // Toast Notification
+
+
     learnButton.addEventListener("click", function() {
         document.getElementById("learn").scrollIntoView({ behavior: 'smooth' });
         console.log("Learn More button clicked");
@@ -49,4 +57,71 @@ document.addEventListener("DOMContentLoaded", function() {
         loginModal.classList.remove("modal-active");
         signupModal.classList.add("modal-active");
     });
+
+    closeSignupVerification.addEventListener("click", function() {
+        signupVerificationModal.classList.remove("modal-active");
+    });
+
+    // Handle verification sent successfully
+    if (urlParams.get("verification") === "sent") {
+        signupModal.classList.remove("modal-active");
+        signupVerificationModal.classList.add("modal-active");
+    }
+
+    // Handle verification success
+    if (urlParams.get("verification") === "success") {
+        signupVerificationModal.classList.remove("modal-active");
+        alert("Verification successful! You can now log in.");
+        loginModal.classList.add("modal-active");
+    }
+
+    // Error Handling
+    const error = urlParams.get("error");
+    if (error) {
+        switch (error) {
+            case 'emptyfields':
+                alert("Please fill in all fields.");
+                signupModal.classList.add("modal-active");
+                break;
+            case 'passwordmismatch':
+                alert("Passwords do not match. Please try again.");
+                signupModal.classList.add("modal-active");
+                break;
+            case 'invalidemail':
+                alert("Invalid email address. Please enter a valid email.");
+                signupModal.classList.add("modal-active");
+                break;
+            case 'emailexists':
+                alert("Email already exists. Please use a different email.");
+                signupModal.classList.add("modal-active");
+                break;
+            case 'failedtosendverificationemail':
+                alert("Failed to send verification email. Please try again later.");
+                signupVerificationModal.classList.add("modal-active");
+                break;
+            case 'invalidsession':
+                alert("An error occurred. Please refresh the page and try again.");
+                signupModal.classList.add("modal-active");
+                break;
+            case 'codeexpired':
+                alert("Verification code has expired. Please request a new code.");
+                signupVerificationModal.classList.add("modal-active");
+                break;
+            case 'verificationfailed':
+                alert("Verification failed. Please check your credentials and try again.");
+                signupVerificationModal.classList.add("modal-active");
+                break;
+            case 'invalidcode':
+                alert("Invalid verification code. Please check your email and try again.");
+                signupVerificationModal.classList.add("modal-active");
+                break;
+            default:
+                alert("An unknown error occurred. Please try again.");
+        }
+    }
+
+    // Clean up URL parameters
+    if (urlParams.has("error") || urlParams.has("verification")) {
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
 });
