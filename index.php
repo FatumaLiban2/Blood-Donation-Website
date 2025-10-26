@@ -549,7 +549,7 @@
             <div class="modal-content">
                 <span id="closeSignupVerification" class="close">&times;</span>
                 <h2>Enter Verification Code</h2>
-                <p>A verification code has been sent to your email. Please enter it below to complete your registration.</p>
+                <p>A verification code has been sent to your email.</p>
                 <form id="verificationForm" action="handlers/verificationHandler.php" method="post">
                     <div class="form-group">
                         <label for="verificationCode">Verification Code</label>

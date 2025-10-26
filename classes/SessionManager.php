@@ -1,6 +1,6 @@
 <?php
 
-require_once "../autoload.php";
+require_once __DIR__ . "/../autoload.php";
 
 Class SessionManager {
     private const SESSION_COOKIE_NAME = "auth_token";

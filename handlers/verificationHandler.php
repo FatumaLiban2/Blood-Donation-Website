@@ -1,6 +1,6 @@
 <?php
 
-require_once "../autoload.php";
+require_once __DIR__ . "/../autoload.php";
 
 session_start();
 
@@ -10,13 +10,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Check if the verification code is set in the session
         if (!isset($_SESSION['verification_code']) || !isset($_SESSION['pending_verification_id']) || !isset($_SESSION['pending_verification_email'])) {
-            header("Location: ../index.php?error=invalidsession");
+            header("Location: /index.php?error=invalidsession");
             exit();
         }
 
         // Check if code is expired
         if (time() > $_SESSION['verification_code_expiry']) {
-            header("Location: ../index.php?error=codeexpired");
+            header("Location: /index.php?error=codeexpired");
             exit();
         }
 
@@ -32,17 +32,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 unset($_SESSION['verification_code_expiry']);
                 unset($_SESSION['pending_verification_id']);
                 unset($_SESSION['pending_verification_email']);
+                unset($_SESSION['pending_verification_name']);
 
                 // Redirect to verification success page
-                header("Location: ../index.php?verification=success");
+                header("Location: /index.php?verification=success");
                 exit();
             } else {
-                header("Location: ../index.php?error=verificationfailed");
+                header("Location: /index.php?error=verificationfailed");
                 exit();
             }
         } else {
             // If the code is incorrect, redirect with an error
-            header("Location: ../index.php?error=invalidcode");
+            header("Location: /index.php?error=invalidcode");
             exit();
         }
     }
