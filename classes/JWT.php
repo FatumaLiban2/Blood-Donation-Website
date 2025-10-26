@@ -9,11 +9,11 @@ class JWT {
     private const ALGORITHM = "EdDSA";
 
     private static function getPrivateKey(): string {
-        return base64_decode(JWT_PRIVATE_KEY_ENCODED);
+        return trim(JWT_PRIVATE_KEY_ENCODED);
     }
 
     private static function getPublicKey(): string {
-        return base64_decode(JWT_PUBLIC_KEY_ENCODED);
+        return trim(JWT_PUBLIC_KEY_ENCODED);
     }
 
     public static function generateToken($patient_id, $email): string {
