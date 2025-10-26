@@ -1,6 +1,6 @@
 <?php
 
-require_once _DIR_ . '/../autoload.php';
+require_once __DIR__ . '/../autoload.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
