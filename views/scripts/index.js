@@ -106,6 +106,11 @@ document.addEventListener("DOMContentLoaded", function() {
         loginModal.classList.add("modal-active");
     }
 
+    if (urlParams.get("login") === "success") {
+        alert("Login successful! Welcome back.");
+        loginModal.classList.remove("modal-active");
+    }
+
     // Error Handling
     const error = urlParams.get("error");
     if (error) {
@@ -145,6 +150,10 @@ document.addEventListener("DOMContentLoaded", function() {
             case 'invalidcode':
                 alert("Invalid verification code. Please check your email and try again.");
                 signupVerificationModal.classList.add("modal-active");
+                break;
+            case 'invalidcredentials':
+                alert("Invalid login credentials. Please try again.");
+                loginModal.classList.add("modal-active");
                 break;
             default:
                 alert("An unknown error occurred. Please try again.");

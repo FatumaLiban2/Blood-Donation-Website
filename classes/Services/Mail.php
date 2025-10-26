@@ -378,7 +378,7 @@ class Mail {
             <div class='otp-container'>
                 <div class='otp-label'>Your New Verification Code</div>
                 <div class='otp-code'>{$code}</div>
-                <div class='expiry'>⏰ This code expires in 10 minutes</div>
+                <div class='expiry'>⏰ This code expires in 5 minutes</div>
             </div>
 
             <p class='message'>

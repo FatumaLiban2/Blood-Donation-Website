@@ -70,9 +70,8 @@ class Patient {
         return $fetchedId;
     }
 
-    public static function verifyPassword($email, $password): bool {
-        $patient = self::findByEmail($email);
-        if ($patient && password_verify($password, $patient->password)) {
+    public function verifyPassword($password): bool {
+        if (password_verify($password, $this->password)) {
             return true;
         }
         return false;
@@ -83,5 +82,31 @@ class Patient {
         $sql = "UPDATE patients SET is_verified = TRUE, verified_at = NOW() WHERE id = ?";
         $stmt = $db->getConnection()->prepare($sql);
         return $stmt->execute([$patientId]);
+    }
+
+    // Getters
+
+    public function getId() {
+        return $this->id;
+    }
+
+    public function getFirstName() {
+        return $this->first_name;
+    }
+
+    public function getLastName() {
+        return $this->last_name;
+    }
+
+    public function getTelephone() {
+        return $this->telephone;
+    }
+
+    public function getEmail() {
+        return $this->email;
+    }
+
+    public function getPassword() {
+        return $this->password;
     }
 }

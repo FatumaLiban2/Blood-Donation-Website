@@ -501,7 +501,7 @@
                         <label for="loginPassword">Password</label>
                         <input type="password" id="loginPassword" name="loginPassword" required>
                     </div>
-                    <button id="loginSubmit" type="submit" class="btn-primary btn-large">Login</button>
+                    <button id="loginSubmit" type="submit" name="loginSubmit" value="loginSubmit" class="btn-primary btn-large">Login</button>
                     <p class="forgot-pass">Forgot Password?</p>
                     <p id="toSignup" class="modal-link">Don't have an account? <span>Sign up</span></p>
                 </form>

@@ -1,6 +1,6 @@
 <?php
 
-require_once "../autoload.php";
+require_once __DIR__ . "/../autoload.php";
 
 $keyPair = sodium_crypto_sign_keypair();
 $privateKey = sodium_crypto_sign_secretkey($keyPair);
