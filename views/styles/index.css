@@ -913,6 +913,11 @@ body {
     font-weight: 500;
 }
 
+.disabled-link {
+    pointer-events: none;
+    opacity: 0.6;
+}
+
 .modal-link a:hover {
     text-decoration: underline;
 }

@@ -16,6 +16,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     const signupVerificationModal = document.getElementById("signupVerificationModal");
     const closeSignupVerification = document.getElementById("closeSignupVerification");
+    const resendCodeLink = document.getElementById("resendCode");
 
     const urlParams = new URLSearchParams(window.location.search);
 
@@ -62,6 +63,36 @@ document.addEventListener("DOMContentLoaded", function() {
         signupVerificationModal.classList.remove("modal-active");
     });
 
+    if (resendCodeLink) {
+        resendCodeLink.addEventListener("click", async function(event) {
+            event.preventDefault();
+
+            resendCodeLink.classList.add("disabled-link");
+            try {
+                const response = await fetch("handlers/resendOtpHandler.php", {
+                    method: "POST",
+                    headers: {
+                        "X-Requested-With": "XMLHttpRequest"
+                    },
+                    credentials: "same-origin"
+                });
+
+                const payload = await response.json().catch(() => ({}));
+
+                if (!response.ok || payload.error) {
+                    throw new Error(payload.error || "unknown_error");
+                }
+
+                alert("A new verification code has been sent to your email.");
+            } catch (error) {
+                console.error("Resend OTP failed:", error);
+                alert("Unable to resend the verification code right now. Please try again later.");
+            } finally {
+                resendCodeLink.classList.remove("disabled-link");
+            }
+        });
+    }
+
     // Handle verification sent successfully
     if (urlParams.get("verification") === "sent") {
         signupModal.classList.remove("modal-active");
@@ -83,7 +114,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 alert("Please fill in all fields.");
                 signupModal.classList.add("modal-active");
                 break;
-            case 'passwordmismatch':
+            case 'passwordmissmatch':
                 alert("Passwords do not match. Please try again.");
                 signupModal.classList.add("modal-active");
                 break;
