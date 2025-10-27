@@ -19,19 +19,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Check if the fields are empty
         if (empty($first_name) || empty($last_name) || empty($telephone) || empty($email) || empty($password) || empty($confirmPassword)) {
-            header("Location: /index.php?error=emptyfields");
+            header("Location: ../index.php?error=emptyfields");
             exit();
         }
 
         // Check of passwords match
         if ($password !== $confirmPassword) {
-            header("Location: /index.php?error=passwordmissmatch");
+            header("Location: ../index.php?error=passwordmissmatch");
             exit();
         }
 
         // Validate email format
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            header("Location: /index.php?error=invalidemail");
+            header("Location: ../index.php?error=invalidemail");
             exit();
         }
 
@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Check if the email already exists
         if (Patient::findByEmail($email)) {
-            header("Location: /index.php?error=emailexists");
+            header("Location: ../index.php?error=emailexists");
             exit();
         }
 
@@ -61,16 +61,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Send OTP email
             if ($mail->sendOTPMail($fullName, $verificationCode)) {
                 // If email is sent successfully, redirect to show verification modal
-                header("Location: /index.php?verification=sent");
+                header("Location: ../index.php?verification=sent");
                 exit();
             } else {
                 // If email sending fails, redirect to error page
-                header("Location: /index.php?error=failedtosendverificationemail");
+                header("Location: ../index.php?error=failedtosendverificationemail");
                 exit();
             }
 
         } else {
-            header("Location: /index.php?error=registrationfailed");
+            header("Location: ../index.php?error=registrationfailed");
             exit();
         }
     }

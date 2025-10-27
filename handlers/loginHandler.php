@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Check if the fields are empty
         if (empty($email) || empty($password)) {
-            header("Location: /index.php?error=emptyfields");
+            header("Location: ../index.php?error=emptyfields");
             exit();
         }
 
@@ -19,15 +19,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $patient = Patient::findByEmail($email);
 
         if ($patient === null) {
-            header("Location: /index.php?error=emailnotfound");
+            header("Location: ../index.php?error=emailnotfound");
             exit();
         } else {
             if($patient->verifyPassword($password)) {
                 SessionManager::startSession($patient->getId(), $patient->getEmail());
-                header("Location: /views/info.php?login=success");
+                header("Location: ../views/info.php?login=success");
                 exit();
             } else {
-                header("Location: /index.php?error=wrongpassword");
+                header("Location: ../index.php?error=wrongpassword");
                 exit();
             }
         }
