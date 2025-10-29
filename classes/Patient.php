@@ -84,6 +84,22 @@ class Patient {
         return $stmt->execute([$patientId]);
     }
 
+    public static function fetchAll(): array {
+        $db = Database::getInstance();
+        $sql = "SELECT id, first_name, last_name, telephone, email, is_verified FROM patients";
+        $stmt = $db->getConnection()->prepare($sql);
+        $stmt->execute();
+
+        $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        $patients = [];
+
+        foreach ($rows as $row) {
+            $patients[] = self::fromDatabase($row);
+        }
+
+        return $patients;
+    }
+
     // Getters
 
     public function getId() {
