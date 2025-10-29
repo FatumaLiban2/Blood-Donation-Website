@@ -77,6 +77,22 @@ class Admin {
         return false;
     }
 
+    public static function fetchAll(): array {
+        $db = Database::getInstance();
+        $sql = "SELECT * FROM admins";
+        $stmt = $db->getConnection()->prepare($sql);
+        $stmt->execute();
+
+        $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        $admins = [];
+
+        foreach ($rows as $row) {
+            $admins[] = self::fromDatabase($row);
+        }
+
+        return $admins;
+    }
+
     // Getters
 
     public function getId() {
