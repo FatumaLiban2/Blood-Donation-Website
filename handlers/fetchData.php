@@ -6,7 +6,6 @@ error_reporting(E_ALL);
 
 require_once __DIR__ . '/../autoload.php';
 
-session_start();
 
 // Check if the user is authenticated
 if (!class_exists('SessionManager') || !SessionManager::isAuthenticated()) {
