@@ -111,6 +111,13 @@ document.addEventListener("DOMContentLoaded", function() {
         loginModal.classList.remove("modal-active");
     }
 
+    if (urlParams.get("admin") === "registered") {
+        signupModal.classList.remove("modal-active");
+        alert("Signup success");
+        loginModal.classList.add("modal-active");
+
+    }
+
     // Error Handling
     const error = urlParams.get("error");
     if (error) {
@@ -119,6 +126,9 @@ document.addEventListener("DOMContentLoaded", function() {
                 alert("Please fill in all fields.");
                 signupModal.classList.add("modal-active");
                 break;
+            case 'emailnotfound':
+                alert("Email not found");
+                exit();
             case 'passwordmissmatch':
                 alert("Passwords do not match. Please try again.");
                 signupModal.classList.add("modal-active");

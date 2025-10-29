@@ -35,6 +35,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit();
         }
 
+        // Check if email belongs to admin
+        if (str_starts_with($email, 'admin@')) {
+            // Check if the email already exists in the admin table
+            if (Admin::findByEmail($email)) {
+                header("Location: ../index.php?error=emailexists");
+                exit();
+            } else {
+                $admin = new Admin();
+
+                if ($admin->register($first_name, $last_name, $telephone, $email, $password)) {
+                    header("Location: ../index.php?admin=registered");
+                    exit();
+                } else {
+                    header("Location: ../index.php?error=registrationfailed");
+                    exit();
+                }
+            }
+        }
+
         // Instanciate patient class
         $patient = new Patient();
 
