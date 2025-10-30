@@ -4,34 +4,42 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Admin Dashboard</title>
-        <link rel="stylesheet" href="views/styles/admin.css">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="styles/admin.css">
     </head>
 
     <body>
         <header>
-            <div>
-                <h1>LifeBlood Admin Dashboard</h1>
+            <div class="dashboard-title">
+                <h2>LifeBlood Admin Dashboard</h2>
 
                 <div class="admin-info">
                     <span>Welcome, Admin</span>
                     <button class="logout-button">Logout</button>
+                </div>
             </div>
-            
-            <nav class="admin-nav">
-                <ul class="admin-nav-links">
-                    <li><a href="#admins">Manage Admins</a></li>
-                    <li><a href="#patients">Manage Patients</a></li>
-                </ul>
-            </nav>
         </header>
 
         <main>
-            <section id="admins" class="modal">
+            <div class="admin-controls">
+                <button id="adminsTable">Admins</button>
+                <button id="patientsTable">Patients</button>
+                <button id="donationsTable">Donations</button>
+                <button id="shedulesTable">Schedules</button>
+                <button id="reloadData">Reload</button>
+            </div>
 
+            <section id="admins" class="dashboard-section">
+                <!-- Admins table will be rendered here -->
+                <div class="list-container" id="adminsContainer"></div>
+            </section>
+
+            <section id="patients" class="dashboard-section hidden">
+                <!-- Patients table will be rendered here -->
+                <div class="list-container" id="patientsContainer"></div>
             </section>
         </main>
 
-        <script src="views/scripts/admin.js"></script>
+    <script src="scripts/admin.js"></script>
     </body>
 </html>
