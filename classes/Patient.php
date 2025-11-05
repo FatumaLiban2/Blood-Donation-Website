@@ -90,14 +90,10 @@ class Patient {
         $stmt = $db->getConnection()->prepare($sql);
         $stmt->execute();
 
+        // Return plain associative arrays (not objects) for JSON serialization
         $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-        $patients = [];
-
-        foreach ($rows as $row) {
-            $patients[] = self::fromDatabase($row);
-        }
-
-        return $patients;
+        
+        return $rows;
     }
 
     // Getters
