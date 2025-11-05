@@ -79,18 +79,14 @@ class Admin {
 
     public static function fetchAll(): array {
         $db = Database::getInstance();
-        $sql = "SELECT * FROM admins";
+        $sql = "SELECT id, first_name, last_name, telephone, email FROM admins";
         $stmt = $db->getConnection()->prepare($sql);
         $stmt->execute();
 
+        // Return plain associative arrays (not objects) for JSON serialization
         $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-        $admins = [];
-
-        foreach ($rows as $row) {
-            $admins[] = self::fromDatabase($row);
-        }
-
-        return $admins;
+        
+        return $rows;
     }
 
     // Getters

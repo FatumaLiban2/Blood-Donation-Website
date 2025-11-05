@@ -22,21 +22,25 @@
 
         <main>
             <div class="admin-controls">
-                <button id="adminsTable">Admins</button>
-                <button id="patientsTable">Patients</button>
-                <button id="donationsTable">Donations</button>
-                <button id="shedulesTable">Schedules</button>
-                <button id="reloadData">Reload</button>
+                <button id="adminsTable" class="tab-btn active">Admins</button>
+                <button id="patientsTable" class="tab-btn">Patients</button>
+                <button id="donationsTable" class="tab-btn" disabled>Donations</button>
+                <button id="shedulesTable" class="tab-btn" disabled>Schedules</button>
+                <button id="reloadData" class="reload-btn">Reload</button>
             </div>
 
-            <section id="admins" class="dashboard-section">
-                <!-- Admins table will be rendered here -->
-                <div class="list-container" id="adminsContainer"></div>
+            <section id="admins-section" class="dashboard-section">
+                <h3>Admins</h3>
+                <div class="list-container" id="adminsContainer">
+                    <div class="loading">Loading admins...</div>
+                </div>
             </section>
 
-            <section id="patients" class="dashboard-section hidden">
-                <!-- Patients table will be rendered here -->
-                <div class="list-container" id="patientsContainer"></div>
+            <section id="patients-section" class="dashboard-section hidden">
+                <h3>Patients</h3>
+                <div class="list-container" id="patientsContainer">
+                    <div class="loading">Loading patients...</div>
+                </div>
             </section>
         </main>
 

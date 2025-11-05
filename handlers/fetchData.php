@@ -1,8 +1,12 @@
 <?php
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
+// Turn off display_errors for this API endpoint to prevent HTML output
+ini_set('display_errors', 0);
+ini_set('display_startup_errors', 0);
 error_reporting(E_ALL);
+
+// Set JSON header first to ensure any errors are treated as JSON
+header('Content-Type: application/json; charset=utf-8');
 
 require_once __DIR__ . '/../autoload.php';
 
@@ -10,7 +14,6 @@ require_once __DIR__ . '/../autoload.php';
 // Check if the user is authenticated
 if (!class_exists('SessionManager') || !SessionManager::isAuthenticated()) {
     http_response_code(403);
-    header('Content-Type: application/json; charset=utf-8');
     echo json_encode(['error' => 'Forbidden']);
     exit;
 }
@@ -19,7 +22,6 @@ if (!class_exists('SessionManager') || !SessionManager::isAuthenticated()) {
 $currentUserEmail = SessionManager::getCurrentEmail();
 if ($currentUserEmail === null || !str_starts_with($currentUserEmail, 'admin@')) {
     http_response_code(403);
-    header('Content-Type: application/json; charset=utf-8');
     echo json_encode(['error' => 'Forbidden']);
     exit;
 }
@@ -37,14 +39,11 @@ try {
     }
 
     // Return data as JSON
-
-    header('Content-Type: application/json; charset=utf-8');
     http_response_code(200);
     echo json_encode(['patients' => $patients, 'admins' => $admins], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
     exit;
 } catch (Throwable $e) {
     http_response_code(500);
-    header('Content-Type: application/json; charset=utf-8');
     echo json_encode(['error' => $e->getMessage()]);
     exit;
 }
