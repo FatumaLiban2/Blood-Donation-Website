@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             if($patient->verifyPassword($password)) {
                 SessionManager::startSession($patient->getId(), $patient->getEmail());
-                header("Location: ../views/info.php?login=success");
+                header("Location: ../views/dashboard.php?login=success");
                 exit();
             } else {
                 header("Location: ../index.php?error=wrongpassword");

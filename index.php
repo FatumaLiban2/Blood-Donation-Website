@@ -543,7 +543,7 @@
                 </form>
             </div>
         </div>
-
+        
         <!--- Signup Verification Modal --->
         <div id="signupVerificationModal" class="modal">
             <div class="modal-content">
