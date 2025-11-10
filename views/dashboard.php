@@ -26,7 +26,7 @@ $patientName = $patient->getFirstName() . ' ' . $patient->getLastName();
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Donor Dashboard</title>
-        <link rel="stylesheet" href="styles/dashboard.css">
+        <link rel="stylesheet" href="styles/dashboard.css?v=<?php echo time(); ?>">
     </head>
 
     <body>
@@ -161,10 +161,6 @@ $patientName = $patient->getFirstName() . ' ' . $patient->getLastName();
                         <div class="info-group">
                             <label>Phone</label>
                             <p><?php echo htmlspecialchars($patient->getTelephone()); ?></p>
-                        </div>
-                        <div class="info-group">
-                            <label>Member Since</label>
-                            <p id="memberSince">-</p>
                         </div>
                     </div>
                 </section>

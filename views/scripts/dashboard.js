@@ -159,10 +159,7 @@ function displayDonationHistory(history) {
 function updateProfile(profile) {
     if (!profile) return;
     
-    const memberSince = document.getElementById('memberSince');
-    if (memberSince && profile.created_at) {
-        memberSince.textContent = formatDate(profile.created_at);
-    }
+    // Profile information is displayed in PHP
 }
 
 // Handle schedule form submission
