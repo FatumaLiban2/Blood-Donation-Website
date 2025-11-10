@@ -1,5 +1,5 @@
 <?php
-require_once _DIR_ . '/../autoload.php';
+require_once __DIR__ . '/../autoload.php';
 
 header('Content-Type: application/json');
 

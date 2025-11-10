@@ -1,5 +1,5 @@
 <?php
-require_once _DIR_ . '/../autoload.php';
+require_once __DIR__ . '/../autoload.php';
 
 header('Content-Type: application/json');
 
@@ -94,6 +94,17 @@ try {
     http_response_code(500);
     echo json_encode([
         'success' => false,
-        'message' => 'Database error: ' . $e->getMessage()
+        'message' => 'Database error: ' . $e->getMessage(),
+        'error_details' => [
+            'code' => $e->getCode(),
+            'file' => $e->getFile(),
+            'line' => $e->getLine()
+        ]
+    ]);
+} catch (Exception $e) {
+    http_response_code(500);
+    echo json_encode([
+        'success' => false,
+        'message' => 'Error: ' . $e->getMessage()
     ]);
 }
