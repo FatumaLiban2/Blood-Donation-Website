@@ -96,6 +96,21 @@ class Patient {
         return $rows;
     }
 
+    // Updaters
+    public function updatePassword($newPassword): bool {
+        $hashedPassword = password_hash($newPassword, PASSWORD_BCRYPT);
+        $sql = "UPDATE patients SET password = ? WHERE patient_id = ?";
+        $stmt = $this->db->getConnection()->prepare($sql);
+        $updated = $stmt->execute([$hashedPassword, $this->id]);
+
+        if ($updated) {
+            $this->password = $hashedPassword;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     // Getters
 
     public function getId() {

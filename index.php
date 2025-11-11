@@ -502,7 +502,7 @@
                         <input type="password" id="loginPassword" name="loginPassword" required>
                     </div>
                     <button id="loginSubmit" type="submit" name="loginSubmit" value="loginSubmit" class="btn-primary btn-large">Login</button>
-                    <p class="forgot-pass"><a href="views/forgot_password.php" style="color: #e63946; text-decoration: none;">Forgot Password?</a></p>
+                    <p id="forgotPassword" class="forgot-pass">Forgot Password?</p>
                     <p id="toSignup" class="modal-link">Don't have an account? <span>Sign up</span></p>
                 </form>
             </div>
@@ -557,6 +557,58 @@
                     </div>
                     <button id="verifyCode" type="submit" name="verifyCodeSubmit" class="btn-primary btn-large">Verify Code</button>
                     <p id="resendCode" class="modal-link">Didn't receive the code? <span>Resend Code</span></p>
+                </form>
+            </div>
+        </div>
+
+        <!--- Forgot Password Modal --->
+        <div id="forgotPasswordModal" class="modal">
+            <div class="modal-content">
+                <span id="closeForgotPassword" class="close">&times;</span>
+                <h2>Forgot Password</h2>
+                <form id="forgotPasswordForm" action="handlers/forgotPasswordHandler.php" method="post">
+                    <div class="form-group">
+                        <label for="forgotPasswordEmail">Enter your email address</label>
+                        <input type="email" id="forgotPasswordEmail" name="forgotPasswordEmail" required> 
+                    </div>
+                    <button id="forgotPasswordSubmit" type="submit" name="forgotPasswordSubmit" class="btn-primary btn-large">Send OTP</button>
+                    <p id="toLoginFromForgot" class="modal-link">Remembered your password? <span>Login</span></p>
+                    <p id="resendOtp" class="modal-link">Didn't receive the OTP? <span>Resend OTP</span></p>
+                </form>
+            </div>
+        </div>
+
+        <!--- Forgot Password OTP Modal --->
+        <div id="forgotPasswordOtpModal" class="modal">
+            <div class="modal-content">
+                <span id="closeForgotPasswordOtp" class="close">&times;</span>
+                <h2>Enter OTP Code</h2>
+                <form id="forgotPasswordOtpForm" action="handlers/forgotPasswordHandler.php" method="post">
+                    <div class="form-group">
+                        <label for="forgotPasswordOtp">An OTP Code has been sent to your email</label>
+                        <input type="text" id="forgotPasswordOtp" name="forgotPasswordOtp" required>
+                    </div>
+                    <button id="forgotPasswordOtpSubmit" type="submit" name="forgotPasswordOtpSubmit" class="btn-primary btn-large">Verify OTP</button>
+                    <p id="resendForgotPasswordOtp" class="modal-link">Didn't receive the OTP? <span>Resend OTP</span></p>
+                </form>
+            </div>
+        </div>
+
+        <!--- Reset Password Modal --->
+        <div id="resetPasswordModal" class="modal">
+            <div class="modal-content">
+                <span id="closeResetPassword" class="close">&times;</span>
+                <h2>Reset Password</h2>
+                <form id="resetPasswordForm" action="handlers/resetPasswordHandler.php" method="post">
+                    <div class="form-group">
+                        <label for="newPassword">New Password</label>
+                        <input type="password" id="newPassword" name="newPassword" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmNewPassword">Confirm New Password</label>
+                        <input type="password" id="confirmNewPassword" name="confirmNewPassword" required>
+                    </div>
+                    <button id="resetPasswordSubmit" type="submit" name="resetPasswordSubmit" class="btn-primary btn-large">Reset Password</button>
                 </form>
             </div>
         </div>

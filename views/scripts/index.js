@@ -18,6 +18,19 @@ document.addEventListener("DOMContentLoaded", function() {
     const closeSignupVerification = document.getElementById("closeSignupVerification");
     const resendCodeLink = document.getElementById("resendCode");
 
+    const forgotPasswordModal = document.getElementById("forgotPasswordModal");
+    const forgotPasswordOtpModal = document.getElementById("forgotPasswordOtpModal");
+    const closeForgotPassword = document.getElementById("closeForgotPassword");
+    const closeForgotPasswordOtp = document.getElementById("closeForgotPasswordOtp");
+    const toLoginFromForgot = document.getElementById("toLoginFromForgot");
+    const resendOtp = document.getElementById("resendOtp");
+    const forgotPasswordEmailInput = document.getElementById("forgotPasswordEmail");
+    const forgotPassword = document.getElementById("forgotPassword");
+
+    const resetPasswordModal = document.getElementById("resetPasswordModal");
+    const closeResetPassword = document.getElementById("closeResetPassword");
+
+
     const urlParams = new URLSearchParams(window.location.search);
 
     // Toast Notification
@@ -63,13 +76,35 @@ document.addEventListener("DOMContentLoaded", function() {
         signupVerificationModal.classList.remove("modal-active");
     });
 
+    forgotPassword.addEventListener("click", function() {
+        loginModal.classList.remove("modal-active");
+        forgotPasswordModal.classList.add("modal-active");
+    });
+
+    closeForgotPassword.addEventListener("click", function() {
+        forgotPasswordModal.classList.remove("modal-active");
+    });
+
+    closeForgotPasswordOtp.addEventListener("click", function() {
+        forgotPasswordOtpModal.classList.remove("modal-active");
+    });
+
+    toLoginFromForgot.addEventListener("click", function() {
+        forgotPasswordModal.classList.remove("modal-active");
+        loginModal.classList.add("modal-active");
+    });
+
+    closeResetPassword.addEventListener("click", function() {
+        resetPasswordModal.classList.remove("modal-active");
+    });
+
     if (resendCodeLink) {
         resendCodeLink.addEventListener("click", async function(event) {
             event.preventDefault();
 
             resendCodeLink.classList.add("disabled-link");
             try {
-                const response = await fetch("handlers/resendOtpHandler.php", {
+                const response = await fetch("handlers/resendVerificationHandler.php", {
                     method: "POST",
                     headers: {
                         "X-Requested-With": "XMLHttpRequest"
@@ -85,13 +120,55 @@ document.addEventListener("DOMContentLoaded", function() {
 
                 alert("A new verification code has been sent to your email.");
             } catch (error) {
-                console.error("Resend OTP failed:", error);
+                console.error("Resend OTP failed: ", error);
                 alert("Unable to resend the verification code right now. Please try again later.");
             } finally {
                 resendCodeLink.classList.remove("disabled-link");
             }
         });
     }
+
+    if (resendOtp) {
+        resendOtp.addEventListener("click", async function(event) {
+            event.preventDefault();
+
+            resendOtp.classList.add("disabled-link");
+
+            const email = forgotPasswordEmailInput ? forgotPasswordEmailInput.value.trim() : "";
+
+            if (!email) {
+                alert("Enter the email address you want the OTP sent to first.");
+                resendOtp.classList.remove("disabled-link");
+                return;
+            }
+            try {
+                const response = await fetch("handlers/resendOtpHandler.php", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-Requested-With": "XMLHttpRequest"
+                    },
+                    credentials: "same-origin",
+                    body: JSON.stringify({ email })
+                });
+
+                const payload = await response.json().catch(() => ({}));
+
+                if (!response.ok || payload.error) {
+                    throw new Error(payload.error || "unknown_error");
+                }
+
+                alert("A new OTP code has been sent to your email.");
+            } catch (error) {
+                console.error("Resend OTP failed: ", error);
+                alert("Unable to resend the verification cde right now. Please try again later.");
+            } finally {
+                resendOtp.classList.remove("disabled-link");
+            }
+        });
+
+    }
+
 
     // Handle verification sent successfully
     if (urlParams.get("verification") === "sent") {
@@ -117,6 +194,25 @@ document.addEventListener("DOMContentLoaded", function() {
         loginModal.classList.add("modal-active");
 
     }
+
+    if (urlParams.get("forgotpassword") === "otpsent") {
+        forgotPasswordModal.classList.remove("modal-active");
+        alert("An OTP code has been sent to your email.");
+        forgotPasswordOtpModal.classList.add("modal-active");
+    }
+
+    if (urlParams.get("resetPassword") === "start") {
+        forgotPasswordOtpModal.classList.remove("modal-active");
+        alert("OTP verified! You can now reset your password.");
+        resetPasswordModal.classList.add("modal-active");
+    }
+
+    if (urlParams.get("resetpassword") === "success") {
+        resetPasswordModal.classList.remove("modal-active");
+        alert("Password reset successful! You can now log in with your new password.");
+        loginModal.classList.add("modal-active");
+    }
+
 
     // Error Handling
     const error = urlParams.get("error");
@@ -147,7 +243,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 break;
             case 'invalidsession':
                 alert("An error occurred. Please refresh the page and try again.");
-                signupModal.classList.add("modal-active");
                 break;
             case 'codeexpired':
                 alert("Verification code has expired. Please request a new code.");
@@ -164,6 +259,26 @@ document.addEventListener("DOMContentLoaded", function() {
             case 'invalidcredentials':
                 alert("Invalid login credentials. Please try again.");
                 loginModal.classList.add("modal-active");
+                break;
+            case 'emailfailed':
+                alert("Failed to send email. Please try again later.");
+                forgotPasswordModal.classList.add("modal-active");
+                break;
+            case 'accountnotfound':
+                alert("Account not found. Please check your email and try again.");
+                forgotPasswordModal.classList.add("modal-active");
+                break;
+            case 'forgotcodeexpired':
+                alert("OTP code has expired. Please request a new code.");
+                forgotPasswordOtpModal.classList.add("modal-active");
+                break;
+            case 'invalidresetcode':
+                alert("Invalid OTP code. Please check your email and try again.");
+                forgotPasswordOtpModal.classList.add("modal-active");
+                break;
+            case 'resetfailed':
+                alert("Failed to reset password. Please try again later.");
+                resetPasswordModal.classList.add("modal-active");
                 break;
             default:
                 alert("An unknown error occurred. Please try again.");
