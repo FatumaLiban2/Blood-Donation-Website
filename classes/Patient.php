@@ -18,7 +18,7 @@ class Patient {
 
     private static function fromDatabase(array $row): self {
         $patient = new self();
-        $patient->id = $row['id'];
+        $patient->id = $row['patient_id'];
         $patient->first_name = $row['first_name'];
         $patient->last_name = $row['last_name'];
         $patient->telephone = $row['telephone'];
@@ -79,14 +79,14 @@ class Patient {
 
     public static function markAsVerified($patientId): bool {
         $db = Database::getInstance();
-        $sql = "UPDATE patients SET is_verified = TRUE, verified_at = NOW() WHERE id = ?";
+        $sql = "UPDATE patients SET is_verified = TRUE, verified_at = NOW() WHERE patient_id = ?";
         $stmt = $db->getConnection()->prepare($sql);
         return $stmt->execute([$patientId]);
     }
 
     public static function fetchAll(): array {
         $db = Database::getInstance();
-        $sql = "SELECT id, first_name, last_name, telephone, email, is_verified FROM patients";
+        $sql = "SELECT patient_id, first_name, last_name, telephone, email, is_verified FROM patients";
         $stmt = $db->getConnection()->prepare($sql);
         $stmt->execute();
 
@@ -94,6 +94,21 @@ class Patient {
         $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         
         return $rows;
+    }
+
+    // Updaters
+    public function updatePassword($newPassword): bool {
+        $hashedPassword = password_hash($newPassword, PASSWORD_BCRYPT);
+        $sql = "UPDATE patients SET password = ? WHERE patient_id = ?";
+        $stmt = $this->db->getConnection()->prepare($sql);
+        $updated = $stmt->execute([$hashedPassword, $this->id]);
+
+        if ($updated) {
+            $this->password = $hashedPassword;
+            return true;
+        } else {
+            return false;
+        }
     }
 
     // Getters
