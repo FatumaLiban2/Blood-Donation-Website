@@ -23,7 +23,7 @@ try {
             (SELECT COUNT(*) FROM donations WHERE patient_id = :patient_id AND status = 'completed') as total_donations,
             (SELECT COUNT(*) FROM appointments WHERE patient_id = :patient_id AND status IN ('pending', 'confirmed') AND appointment_date >= CURRENT_DATE) as upcoming_count,
             (SELECT MAX(donation_date) FROM donations WHERE patient_id = :patient_id AND status = 'completed') as last_donation,
-            (SELECT created_at FROM patients WHERE id = :patient_id) as member_since
+            (SELECT created_at FROM patients WHERE patient_id = :patient_id) as member_since
     ";
     
     $stmt = $conn->prepare($statsQuery);
