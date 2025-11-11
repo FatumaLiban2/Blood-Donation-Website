@@ -502,7 +502,7 @@
                         <input type="password" id="loginPassword" name="loginPassword" required>
                     </div>
                     <button id="loginSubmit" type="submit" name="loginSubmit" value="loginSubmit" class="btn-primary btn-large">Login</button>
-                    <p class="forgot-pass">Forgot Password?</p>
+                    <p class="forgot-pass"><a href="views/forgot_password.php" style="color: #e63946; text-decoration: none;">Forgot Password?</a></p>
                     <p id="toSignup" class="modal-link">Don't have an account? <span>Sign up</span></p>
                 </form>
             </div>
