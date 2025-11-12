@@ -23,7 +23,7 @@ if (!$input) {
 }
 
 // Validate required fields
-$requiredFields = ['appointmentDate', 'appointmentTime', 'bloodType'];
+$requiredFields = ['appointmentDate', 'appointmentTime', 'appointmentType', 'bloodGroup'];
 foreach ($requiredFields as $field) {
     if (empty($input[$field])) {
         http_response_code(400);
@@ -34,8 +34,9 @@ foreach ($requiredFields as $field) {
 
 $appointmentDate = $input['appointmentDate'];
 $appointmentTime = $input['appointmentTime'];
-$bloodType = $input['bloodType'];
-$notes = $input['notes'] ?? '';
+$appointmentType = $input['appointmentType'];
+$bloodGroup = $input['bloodGroup'];
+$notes = $input['notes'] ?? null;
 
 // Validate date is in the future
 $today = new DateTime();
@@ -49,42 +50,19 @@ if ($selectedDate < $today) {
 }
 
 try {
-    $db = Database::getInstance();
-    $conn = $db->getConnection();
-    
-    // Check if patient has already scheduled an appointment on this date
-    $checkQuery = "
-        SELECT COUNT(*) as count FROM appointments 
-        WHERE patient_id = :patient_id 
-        AND appointment_date = :appointment_date 
-        AND status IN ('pending', 'confirmed')
-    ";
-    $stmt = $conn->prepare($checkQuery);
-    $stmt->execute([
-        'patient_id' => $patientId,
-        'appointment_date' => $appointmentDate
-    ]);
-    $result = $stmt->fetch();
-    
-    if ($result['count'] > 0) {
+    // Check if patient already has an appointment on this date
+    if (Appointments::checkDuplicateAppointment($patientId, $appointmentDate)) {
         http_response_code(400);
         echo json_encode(['success' => false, 'message' => 'You already have an appointment on this date']);
         exit();
     }
     
     // Check if patient donated recently (must wait 56 days)
-    $lastDonationQuery = "
-        SELECT MAX(donation_date) as last_donation 
-        FROM donations 
-        WHERE patient_id = :patient_id AND status = 'completed'
-    ";
-    $stmt = $conn->prepare($lastDonationQuery);
-    $stmt->execute(['patient_id' => $patientId]);
-    $lastDonationResult = $stmt->fetch();
+    $lastAppointment = Appointments::getLastCompletedAppointment($patientId);
     
-    if ($lastDonationResult['last_donation']) {
-        $lastDonation = new DateTime($lastDonationResult['last_donation']);
-        $nextEligible = clone $lastDonation;
+    if ($lastAppointment) {
+        $lastDate = new DateTime($lastAppointment);
+        $nextEligible = clone $lastDate;
         $nextEligible->modify('+56 days');
         
         if ($selectedDate < $nextEligible) {
@@ -97,29 +75,35 @@ try {
         }
     }
     
-    // Insert appointment
-    $insertQuery = "
-        INSERT INTO appointments (patient_id, appointment_date, appointment_time, blood_type, notes, status, created_at)
-        VALUES (:patient_id, :appointment_date, :appointment_time, :blood_type, :notes, 'pending', NOW())
-    ";
+    // Get patient info for full name
+    $patient = Patient::findByEmail($session->email);
+    if (!$patient) {
+        http_response_code(404);
+        echo json_encode(['success' => false, 'message' => 'Patient not found']);
+        exit();
+    }
     
-    $stmt = $conn->prepare($insertQuery);
-    $success = $stmt->execute([
-        'patient_id' => $patientId,
-        'appointment_date' => $appointmentDate,
-        'appointment_time' => $appointmentTime,
-        'blood_type' => $bloodType,
-        'notes' => $notes
-    ]);
+    $fullName = $patient->getFirstName() . ' ' . $patient->getLastName();
+    
+    // Create appointment using Appointments class
+    $appointment = new Appointments();
+    $success = $appointment->scheduleAppointment(
+        $patientId,
+        $fullName,
+        $appointmentType,
+        $appointmentDate,
+        $appointmentTime,
+        $bloodGroup,
+        $notes
+    );
     
     if ($success) {
         echo json_encode([
             'success' => true,
-            'message' => 'Appointment scheduled successfully',
-            'appointmentId' => $conn->lastInsertId()
+            'message' => 'Appointment scheduled successfully'
         ]);
     } else {
-        throw new Exception('Failed to insert appointment');
+        throw new Exception('Failed to schedule appointment');
     }
     
 } catch (PDOException $e) {
