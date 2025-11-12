@@ -29,6 +29,7 @@ if ($currentUserEmail === null || !str_starts_with($currentUserEmail, 'admin@'))
 try {
     $patients = [];
     $admins = [];
+    $allAppointments = [];
 
     if (class_exists('Patient') && is_callable(['Patient', 'fetchAll'])) {
         $patients = Patient::fetchAll();
@@ -38,12 +39,26 @@ try {
         $admins = Admin::fetchAll();
     }
 
-    if (class_exists('Appointments') && is_callable(['Appointments', 'getAllAppointments'])) {
-        $allAppointments = Appointments::getAllAppointments();
+    if (class_exists('Appointments') && is_callable(['Appointments', 'getPendingAppointments'])) {
+        $pendingAppointments = Appointments::getPendingAppointments();
+    } else {
+        $pendingAppointments = [];
     }
+
+    if (class_exists('Appointments') && is_callable(['Appointments', 'getCompletedAppointments'])) {
+        $completedAppointments = Appointments::getCompletedAppointments();
+    } else {
+        $completedAppointments = [];
+    }
+
     // Return data as JSON
     http_response_code(200);
-    echo json_encode(['patients' => $patients, 'admins' => $admins, 'appointments' => $allAppointments], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+    echo json_encode([
+        'patients' => $patients, 
+        'admins' => $admins, 
+        'appointments' => $pendingAppointments,
+        'completedAppointments' => $completedAppointments
+    ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
     exit;
 } catch (Throwable $e) {
     http_response_code(500);

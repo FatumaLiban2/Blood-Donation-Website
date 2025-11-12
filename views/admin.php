@@ -24,8 +24,8 @@
             <div class="admin-controls">
                 <button id="adminsTable" class="tab-btn active">Admins</button>
                 <button id="patientsTable" class="tab-btn">Patients</button>
-                <button id="donationsTable" class="tab-btn" disabled>Donations</button>
-                <button id="shedulesTable" class="tab-btn" disabled>Schedules</button>
+                <button id="appointmentsTable" class="tab-btn">Pending Appointments</button>
+                <button id="doneAppointmentsTable" class="tab-btn">Done Appointments</button>
                 <button id="reloadData" class="reload-btn">Reload</button>
             </div>
 
@@ -40,6 +40,20 @@
                 <h3>Patients</h3>
                 <div class="list-container" id="patientsContainer">
                     <div class="loading">Loading patients...</div>
+                </div>
+            </section>
+
+            <section id="appointments-section" class="dashboard-section hidden">
+                <h3>Pending Appointments</h3>
+                <div class="list-container" id="appointmentsContainer">
+                    <div class="loading">Loading appointments...</div>
+                </div>
+            </section>
+
+            <section id="done-appointments-section" class="dashboard-section hidden">
+                <h3>Completed Appointments</h3>
+                <div class="list-container" id="doneAppointmentsContainer">
+                    <div class="loading">Loading completed appointments...</div>
                 </div>
             </section>
         </main>

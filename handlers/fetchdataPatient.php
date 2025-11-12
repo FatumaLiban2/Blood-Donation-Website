@@ -35,7 +35,7 @@ try {
             ];
         } else if (is_array($apt)) {
             $appointments[] = [
-                'appointment_id' => $apt['appointment_id'] ?? null,
+                'appointment_id' => $apt['appointments_id'] ?? null,
                 'patient_id' => $apt['patient_id'] ?? null,
                 'full_name' => $apt['full_name'] ?? '',
                 'appointment_type' => $apt['appointment_type'] ?? '',
