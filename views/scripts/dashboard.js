@@ -65,10 +65,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Load dashboard data
 function loadDashboardData() {
-    fetch('../handlers/fetchDashboardData.php')
-        .then(response => response.json())
+    console.log('Loading dashboard data...');
+    fetch('../handlers/fetchdataPatient.php')
+        .then(response => {
+            console.log('Response status:', response.status);
+            return response.json();
+        })
         .then(data => {
+            console.log('Received data:', data);
             if (data.success) {
+                console.log('Appointments:', data.appointments);
                 updateStats(data.stats);
                 displayRecentAppointments(data.recentAppointments);
                 displayAllAppointments(data.appointments);
@@ -76,10 +82,11 @@ function loadDashboardData() {
                 updateProfile(data.profile);
             } else {
                 console.error('Error loading dashboard data:', data.message);
+                showEmptyState();
             }
         })
         .catch(error => {
-            console.error('Error:', error);
+            console.error('Fetch error:', error);
             showEmptyState();
         });
 }
@@ -106,8 +113,9 @@ function displayRecentAppointments(appointments) {
     container.innerHTML = appointments.map(apt => `
         <div class="appointment-item">
             <h4>Appointment on ${formatDate(apt.appointment_date)}</h4>
-            <p><strong>Time:</strong> ${apt.appointment_time}</p>
-            <p><strong>Blood Type:</strong> ${apt.blood_type}</p>
+            <p><strong>Time:</strong> ${apt.appointment_time || '-'}</p>
+            <p><strong>Type:</strong> ${apt.appointment_type || '-'}</p>
+            <p><strong>Blood Group:</strong> ${apt.blood_group || apt.blood_type || '-'}</p>
             ${apt.notes ? `<p><strong>Notes:</strong> ${apt.notes}</p>` : ''}
             <span class="appointment-status status-${apt.status}">${capitalizeFirst(apt.status)}</span>
         </div>
@@ -126,10 +134,10 @@ function displayAllAppointments(appointments) {
     container.innerHTML = appointments.map(apt => `
         <div class="appointment-item">
             <h4>Appointment on ${formatDate(apt.appointment_date)}</h4>
-            <p><strong>Time:</strong> ${apt.appointment_time}</p>
-            <p><strong>Blood Type:</strong> ${apt.blood_type}</p>
+            <p><strong>Time:</strong> ${apt.appointment_time || '-'}</p>
+            <p><strong>Type:</strong> ${apt.appointment_type || '-'}</p>
+            <p><strong>Blood Group:</strong> ${apt.blood_group || apt.blood_type || '-'}</p>
             ${apt.notes ? `<p><strong>Notes:</strong> ${apt.notes}</p>` : ''}
-            <p><strong>Created:</strong> ${formatDate(apt.created_at)}</p>
             <span class="appointment-status status-${apt.status}">${capitalizeFirst(apt.status)}</span>
         </div>
     `).join('');
@@ -147,8 +155,9 @@ function displayDonationHistory(history) {
     container.innerHTML = history.map(item => `
         <div class="history-item">
             <div class="history-item-info">
-                <h4>Donation on ${formatDate(item.donation_date)}</h4>
-                <p><strong>Blood Type:</strong> ${item.blood_type}</p>
+                <h4>Donation on ${formatDate(item.appointment_date)}</h4>
+                <p><strong>Type:</strong> ${item.appointment_type || '-'}</p>
+                <p><strong>Blood Group:</strong> ${item.blood_group || item.blood_type || '-'}</p>
             </div>
             <div class="history-item-badge">Completed</div>
         </div>
@@ -169,7 +178,7 @@ function handleScheduleSubmit(e) {
     const formData = new FormData(e.target);
     const data = Object.fromEntries(formData.entries());
     
-    fetch('../handlers/scheduleAppointment.php', {
+    fetch('../handlers/scheduleAppointmentHandler.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

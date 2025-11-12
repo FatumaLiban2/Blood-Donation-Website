@@ -334,7 +334,7 @@ main { padding: 35px 40px; max-width: 1400px; margin: 0 auto; }
 
 .btn-primary { 
     background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
-    color:#fff; 
+    color:var(--primary-red); 
     padding:14px 32px; 
     border-radius:10px; 
     border:none; 

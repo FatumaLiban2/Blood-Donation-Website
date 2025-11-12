@@ -117,9 +117,18 @@ $patientName = $patient->getFirstName() . ' ' . $patient->getLastName();
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="bloodType">Blood Type</label>
-                            <select id="bloodType" name="bloodType" required>
-                                <option value="">Select blood type</option>
+                            <label for="appointmentType">Appointment Type</label>
+                            <select id="appointmentType" name="appointmentType" required>
+                                <option value="">Select type</option>
+                                <option value="Blood Donation">Blood Donation</option>
+                                <option value="Consultation">Consultation</option>
+                                <option value="Follow-up">Follow-up</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="bloodGroup">Blood Group</label>
+                            <select id="bloodGroup" name="bloodGroup" required>
+                                <option value="">Select blood group</option>
                                 <option value="A+">A+</option>
                                 <option value="A-">A-</option>
                                 <option value="B+">B+</option>

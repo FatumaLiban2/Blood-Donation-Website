@@ -126,6 +126,7 @@ document.addEventListener('DOMContentLoaded', function () {
             renderData(data);
 
         } catch (error) {
+
             const errorMsg = `<div class="error">Error loading data: ${error.message}</div>`;
             adminsContainer.innerHTML = errorMsg;
             patientsContainer.innerHTML = errorMsg;
