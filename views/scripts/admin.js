@@ -92,6 +92,17 @@ document.addEventListener('DOMContentLoaded', function () {
         reloadBtn.addEventListener('click', () => fetchData(true));
     }
 
+    // Logout button
+    const logoutBtn = document.querySelector('.logout-button');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (confirm('Are you sure you want to logout?')) {
+                window.location.href = '/handlers/logouthandler.php';
+            }
+        });
+    }
+
     // Create table from data
     function createTable(items, columns) {
         if (!items || items.length === 0) {

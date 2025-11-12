@@ -26,6 +26,7 @@ $patientName = $patient->getFirstName() . ' ' . $patient->getLastName();
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Donor Dashboard</title>
+        <link rel="icon" href="data:,">
         <link rel="stylesheet" href="styles/dashboard.css?v=<?php echo time(); ?>">
     </head>
 

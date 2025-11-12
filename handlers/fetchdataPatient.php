@@ -34,6 +34,14 @@ try {
                 'is_completed' => $apt->is_completed ?? false
             ];
         } else if (is_array($apt)) {
+            // Properly convert PostgreSQL boolean
+            $isCompleted = $apt['is_completed'] ?? false;
+            if ($isCompleted === 't' || $isCompleted === 'true' || $isCompleted === true || $isCompleted === 1) {
+                $isCompleted = true;
+            } else {
+                $isCompleted = false;
+            }
+            
             $appointments[] = [
                 'appointment_id' => $apt['appointments_id'] ?? null,
                 'patient_id' => $apt['patient_id'] ?? null,
@@ -43,21 +51,19 @@ try {
                 'schedule_time' => $apt['schedule_time'] ?? null,
                 'blood_group' => $apt['blood_group'] ?? '',
                 'additional_notes' => $apt['additional_notes'] ?? null,
-                'is_completed' => $apt['is_completed'] ?? false
+                'is_completed' => $isCompleted
             ];
         }
     }
     
     // Calculate statistics
-    $completedAppointments = array_filter($appointments, fn($apt) => $apt['is_completed']);
-    $upcomingAppointments = array_filter($appointments, function($apt) {
-        return !$apt['is_completed'] && 
-               $apt['schedule_day'] && 
-               strtotime($apt['schedule_day']) >= strtotime('today');
-    });
+    $completedAppointments = array_filter($appointments, fn($apt) => $apt['is_completed'] === true);
+    $pendingAppointments = array_filter($appointments, fn($apt) => $apt['is_completed'] === false);
     
     $completedCount = count($completedAppointments);
-    $upcomingCount = count($upcomingAppointments);
+    
+    // Count pending appointments (not yet completed)
+    $upcomingCount = count($pendingAppointments);
     
     // Get last completed appointment date
     $lastAppointment = Appointments::getLastCompletedAppointment($patientId);
@@ -79,7 +85,7 @@ try {
         'nextEligible' => $nextEligible
     ];
     
-    // Format appointments for display
+    // Format appointments for display - only pending (not completed) ones
     $formattedAppointments = array_map(function($apt) {
         $time = $apt['schedule_time'] ? date('h:i A', strtotime($apt['schedule_time'])) : '-';
         
@@ -92,17 +98,38 @@ try {
             'blood_group' => $apt['blood_group'],
             'full_name' => $apt['full_name'],
             'notes' => $apt['additional_notes'],
-            'status' => $apt['is_completed'] ? 'completed' : 'upcoming',
+            'status' => 'upcoming',
             'created_at' => $apt['schedule_day']
         ];
-    }, $appointments);
+    }, $pendingAppointments);
     
-    // Get recent appointments (last 5)
+    // Re-index array
+    $formattedAppointments = array_values($formattedAppointments);
+    
+    // Get recent upcoming appointments (next 5 pending ones sorted by date)
+    usort($formattedAppointments, function($a, $b) {
+        return strtotime($a['appointment_date']) - strtotime($b['appointment_date']);
+    });
     $recentAppointments = array_slice($formattedAppointments, 0, 5);
     
     // Get completed appointments as donation history
-    $history = array_filter($formattedAppointments, fn($apt) => $apt['status'] === 'completed');
-    $history = array_values($history); // Re-index array
+    $completedAppointmentsFormatted = array_map(function($apt) {
+        $time = $apt['schedule_time'] ? date('h:i A', strtotime($apt['schedule_time'])) : '-';
+        
+        return [
+            'appointment_id' => $apt['appointment_id'],
+            'appointment_date' => $apt['schedule_day'],
+            'appointment_time' => $time,
+            'appointment_type' => $apt['appointment_type'],
+            'blood_type' => $apt['blood_group'],
+            'blood_group' => $apt['blood_group'],
+            'full_name' => $apt['full_name'],
+            'notes' => $apt['additional_notes'],
+            'status' => 'completed',
+            'created_at' => $apt['schedule_day']
+        ];
+    }, $completedAppointments);
+    $history = array_values($completedAppointmentsFormatted); // Re-index array
     
     // Get patient profile info
     $patient = Patient::findByEmail($session->email);

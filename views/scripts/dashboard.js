@@ -95,8 +95,8 @@ function loadDashboardData() {
 function updateStats(stats) {
     if (!stats) return;
     
-    document.getElementById('totalDonations').textContent = stats.totalDonations || 9;
-    document.getElementById('upcomingCount').textContent = stats.upcomingCount || 2;
+    document.getElementById('totalDonations').textContent = stats.totalDonations ?? 0;
+    document.getElementById('upcomingCount').textContent = stats.upcomingCount ?? 0;
     document.getElementById('lastDonation').textContent = stats.lastDonation || '-';
     document.getElementById('nextEligible').textContent = stats.nextEligible || '-';
 }
