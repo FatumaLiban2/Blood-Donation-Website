@@ -21,7 +21,7 @@ class Appointments {
 
     private static function fromDatabase(array $row): self {
         $appointment = new self();
-        $appointment->appointment_id = $row['appointment_id'];
+        $appointment->appointment_id = $row['appointments_id'];
         $appointment->patient_id = $row['patient_id'];
         $appointment->full_name = $row['full_name'];
         $appointment->appointment_type = $row['appointment_type'];
@@ -72,7 +72,25 @@ class Appointments {
 
     public static function getAllAppointments(): array {
         $db = Database::getInstance();
-        $sql = "SELECT * FROM appointments ORDER BY schedule_day, schedule_time";
+        $sql = "SELECT * FROM appointments ORDER BY schedule_day DESC, schedule_time DESC";
+        $stmt = $db->getConnection()->prepare($sql);
+        $stmt->execute();
+
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    public static function getPendingAppointments(): array {
+        $db = Database::getInstance();
+        $sql = "SELECT * FROM appointments WHERE is_completed = FALSE ORDER BY schedule_day, schedule_time";
+        $stmt = $db->getConnection()->prepare($sql);
+        $stmt->execute();
+
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    public static function getCompletedAppointments(): array {
+        $db = Database::getInstance();
+        $sql = "SELECT * FROM appointments WHERE is_completed = TRUE ORDER BY schedule_day DESC, schedule_time DESC";
         $stmt = $db->getConnection()->prepare($sql);
         $stmt->execute();
 
@@ -81,7 +99,7 @@ class Appointments {
 
     public static function markAsCompleted($appointment_id): bool {
         $db = Database::getInstance();
-        $sql = "UPDATE appointments SET is_completed = true WHERE appointment_id = ?";
+        $sql = "UPDATE appointments SET is_completed = true WHERE appointments_id = ?";
         $stmt = $db->getConnection()->prepare($sql);
         return $stmt->execute([$appointment_id]);
     }
