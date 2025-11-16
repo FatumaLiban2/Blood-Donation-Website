@@ -69,6 +69,14 @@ body {
     background-color: #218838;
 }
 
+.admin-controls .download-btn {
+    background-color: #007BFF;
+}
+
+.admin-controls .download-btn:hover:not(:disabled) {
+    background-color: #0056b3;
+}
+
 /* Dashboard sections */
 .dashboard-section {
     margin: 0 30px 30px;

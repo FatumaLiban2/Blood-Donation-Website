@@ -6,6 +6,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
     <link rel="stylesheet" href="styles/admin.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
     </head>
 
     <body>
@@ -27,6 +29,8 @@
                 <button id="appointmentsTable" class="tab-btn">Pending Appointments</button>
                 <button id="doneAppointmentsTable" class="tab-btn">Done Appointments</button>
                 <button id="reloadData" class="reload-btn">Reload</button>
+                <button id="downloadCSV" class="download-btn">Download CSV</button>
+                <button id="downloadPDF" class="download-btn">Download PDF</button>
             </div>
 
             <section id="admins-section" class="dashboard-section">
