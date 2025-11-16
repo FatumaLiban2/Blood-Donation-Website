@@ -92,6 +92,18 @@ document.addEventListener('DOMContentLoaded', function () {
         reloadBtn.addEventListener('click', () => fetchData(true));
     }
 
+    // Download buttons
+    const downloadCSVBtn = document.getElementById('downloadCSV');
+    const downloadPDFBtn = document.getElementById('downloadPDF');
+
+    if (downloadCSVBtn) {
+        downloadCSVBtn.addEventListener('click', () => downloadData('csv'));
+    }
+
+    if (downloadPDFBtn) {
+        downloadPDFBtn.addEventListener('click', () => downloadData('pdf'));
+    }
+
     // Logout button
     const logoutBtn = document.querySelector('.logout-button');
     if (logoutBtn) {
@@ -336,7 +348,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Define columns for patients
         const patientColumns = [
-            { key: 'id', label: 'ID' },
+            { key: 'patient_id', label: 'ID' },
             { key: 'first_name', label: 'First Name' },
             { key: 'last_name', label: 'Last Name' },
             { key: 'email', label: 'Email' },
@@ -363,6 +375,199 @@ document.addEventListener('DOMContentLoaded', function () {
                 confirmAppointment(appointmentId, this);
             });
         });
+    }
+
+    // Download data function
+    function downloadData(format) {
+        if (!cachedData) {
+            alert('No data available. Please wait for data to load.');
+            return;
+        }
+
+        let data, filename;
+
+        // Get data based on current view
+        switch (currentView) {
+            case 'admins':
+                data = cachedData.admins || [];
+                filename = 'admins';
+                break;
+            case 'patients':
+                data = cachedData.patients || [];
+                filename = 'patients';
+                break;
+            case 'appointments':
+                data = cachedData.appointments || [];
+                filename = 'pending_appointments';
+                break;
+            case 'done-appointments':
+                data = cachedData.completedAppointments || [];
+                filename = 'completed_appointments';
+                break;
+            default:
+                data = [];
+                filename = 'data';
+        }
+
+        if (data.length === 0) {
+            alert('No data to download');
+            return;
+        }
+
+        if (format === 'csv') {
+            downloadCSV(data, filename);
+        } else if (format === 'pdf') {
+            downloadPDF(data, filename);
+        }
+    }
+
+    // Download as CSV
+    function downloadCSV(data, filename) {
+        // Get column headers
+        const headers = Object.keys(data[0]);
+        
+        // Create CSV content
+        let csvContent = headers.join(',') + '\n';
+        
+        data.forEach(row => {
+            const values = headers.map(header => {
+                let value = row[header] || '';
+                // Escape commas and quotes
+                if (typeof value === 'string') {
+                    value = value.replace(/"/g, '""');
+                    if (value.includes(',') || value.includes('\n') || value.includes('"')) {
+                        value = `"${value}"`;
+                    }
+                }
+                return value;
+            });
+            csvContent += values.join(',') + '\n';
+        });
+
+        // Create blob and download
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        
+        link.setAttribute('href', url);
+        link.setAttribute('download', `${filename}_${getCurrentDate()}.csv`);
+        link.style.visibility = 'hidden';
+        
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    // Download as PDF
+    function downloadPDF(data, filename) {
+        // Check if jsPDF is available
+        if (typeof window.jspdf === 'undefined') {
+            alert('PDF library not loaded. Please refresh the page and try again.');
+            return;
+        }
+
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF('l', 'mm', 'a4'); // landscape orientation
+
+        // Add title
+        doc.setFontSize(18);
+        doc.setTextColor(51, 51, 51);
+        doc.text(`LifeBlood - ${formatTitle(filename)}`, 14, 15);
+
+        // Add generation date
+        doc.setFontSize(10);
+        doc.setTextColor(108, 117, 125);
+        doc.text(`Generated on: ${new Date().toLocaleString()}`, 14, 22);
+
+        // Prepare table data
+        const headers = Object.keys(data[0]);
+        const formattedHeaders = headers.map(h => formatHeader(h));
+        
+        const rows = data.map(row => {
+            return headers.map(header => {
+                let value = row[header];
+                
+                // Format boolean values
+                if (header === 'is_verified' || header === 'is_completed') {
+                    value = value ? 'Yes' : 'No';
+                }
+                
+                // Handle null/undefined
+                if (value === null || value === undefined) {
+                    value = '-';
+                }
+                
+                return String(value);
+            });
+        });
+
+        // Add table using autoTable plugin
+        doc.autoTable({
+            head: [formattedHeaders],
+            body: rows,
+            startY: 28,
+            theme: 'grid',
+            styles: {
+                fontSize: 9,
+                cellPadding: 3,
+                overflow: 'linebreak',
+                halign: 'left'
+            },
+            headStyles: {
+                fillColor: [248, 249, 250],
+                textColor: [73, 80, 87],
+                fontStyle: 'bold',
+                lineWidth: 0.1,
+                lineColor: [222, 226, 230]
+            },
+            bodyStyles: {
+                lineWidth: 0.1,
+                lineColor: [222, 226, 230]
+            },
+            alternateRowStyles: {
+                fillColor: [248, 249, 250]
+            },
+            margin: { top: 28, left: 14, right: 14, bottom: 20 }
+        });
+
+        // Add footer
+        const pageCount = doc.internal.getNumberOfPages();
+        for (let i = 1; i <= pageCount; i++) {
+            doc.setPage(i);
+            doc.setFontSize(8);
+            doc.setTextColor(108, 117, 125);
+            doc.text(
+                'LifeBlood Blood Donation Center - Admin Dashboard',
+                doc.internal.pageSize.getWidth() / 2,
+                doc.internal.pageSize.getHeight() - 10,
+                { align: 'center' }
+            );
+        }
+
+        // Save the PDF
+        doc.save(`${filename}_${getCurrentDate()}.pdf`);
+    }
+
+    // Helper functions
+    function getCurrentDate() {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
+    function formatTitle(filename) {
+        return filename.split('_').map(word => 
+            word.charAt(0).toUpperCase() + word.slice(1)
+        ).join(' ');
+    }
+
+    function formatHeader(header) {
+        // Convert snake_case to Title Case
+        return header.split('_').map(word => 
+            word.charAt(0).toUpperCase() + word.slice(1)
+        ).join(' ');
     }
 
     // Initial data fetch
